@@ -1,0 +1,8 @@
+Package: [[name]]
+Version: [[version]]
+Section: mygov
+Priority: optional
+Architecture: all
+Description: [[description]]
+Maintainer: tim.squires@scotland.gsi.gov.uk
+Depends: postgresql, java-jdk
