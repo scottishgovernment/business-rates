@@ -7,6 +7,9 @@ public class Occupier implements Serializable {
 
     private String name;
 
+    public Occupier() {
+    }
+
     public Occupier(String name) {
         this.name = name;
     }

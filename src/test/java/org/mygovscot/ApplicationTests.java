@@ -1,18 +1,15 @@
-package test;
+package org.mygovscot;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mygovscot.Application;
 import org.mygovscot.representations.SearchResponse;
 import org.mygovscot.services.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -37,27 +34,20 @@ public class ApplicationTests {
     private RateService rateService;
 
     @Test
-    @Ignore
     public void search() {
 
         // Retrieve the content item from the REST endpoint
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("search", "EH66QQ");
-        ResponseEntity<SearchResponse> singleResponse = restTemplate.getForEntity(context, SearchResponse.class, parameters);
+        ResponseEntity<SearchResponse> singleResponse = restTemplate.getForEntity(context, SearchResponse.class, "EH66QQ");
         SearchResponse body = singleResponse.getBody();
 
-        // // Make sure the the retrieved content item has the same values as
-        // the
-        // // saved version
-        // Assert.assertEquals(id, ReflectionTestUtils.getField(body, "id"));
-        // Assert.assertEquals(type.getName(),
-        // body.getContentItemType().getName());
+        Assert.assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
+        Assert.assertTrue(body.getProperties().size() > 0);
 
     }
 
     @Before
     public void setup() {
-        context = "http://localhost:9990/address";
+        context = "http://localhost:9990/address/?search={search}";
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

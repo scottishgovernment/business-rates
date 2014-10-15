@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/address")
 public class RateService {
 
-    private static final Logger log = LoggerFactory.getLogger(RateService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RateService.class);
 
     @Autowired
     private RestTemplate template;
@@ -48,12 +48,12 @@ public class RateService {
      * @return The search but with \n replaced with +
      * @throws UnsupportedEncodingException
      */
-    private String urlSafe(String search) {
+    protected String urlSafe(String search) {
         if (StringUtils.isEmpty(search)) {
             return "";
         } else {
             String cleaned = search.replace("\\n", " ");
-            log.info("Searching using " + cleaned);
+            LOGGER.debug("Searching using " + cleaned);
             return cleaned;
         }
     }

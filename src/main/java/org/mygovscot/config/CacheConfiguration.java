@@ -17,6 +17,7 @@ public class CacheConfiguration {
     public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() throws MalformedURLException {
         EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
         ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
+        ehCacheManagerFactoryBean.setShared(true);
         return ehCacheManagerFactoryBean;
     }
 
