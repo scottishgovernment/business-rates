@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mygovscot.representations.SearchResponse;
 import org.mygovscot.services.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,9 @@ public class ApplicationTests {
     private String context;
 
     private RestTemplate restTemplate;
+
+    @Value("${http.proxyPort}")
+    private int proxyPort = 80;
 
     @Autowired
     private RateService rateService;

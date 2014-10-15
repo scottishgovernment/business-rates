@@ -3,6 +3,8 @@ package org.mygovscot.config;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class ProxyConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyConfiguration.class);
 
     @Value("${http.proxyHost}")
     private String proxyHost = null;
@@ -35,6 +39,8 @@ public class ProxyConfiguration {
         converter.setObjectMapper(mapper);
 
         RestTemplate restTemplate;
+
+        LOG.info("Proxy configuration = " + proxyHost + ":" + proxyPort);
 
         if (StringUtils.isEmpty(proxyHost)) {
             restTemplate = new RestTemplate();
