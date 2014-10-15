@@ -1,10 +1,15 @@
 package org.mygovscot.services;
 
+import java.io.UnsupportedEncodingException;
+
 import org.mygovscot.representations.SearchResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/address")
 public class RateService {
 
+    private static final Logger log = LoggerFactory.getLogger(RateService.class);
+
     @Autowired
     private RestTemplate template;
 
@@ -28,7 +35,27 @@ public class RateService {
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
-        return template.getForObject(saaUrl, SearchResponse.class, search);
+        return template.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+    }
+
+    /**
+     * The SAA search requires the address to be + separated, not \n separated.
+     * They supply the addresses with \n so to save the client from replacing
+     * the characters, this does it here.
+     * 
+     * @param search
+     *            The client requested search
+     * @return The search but with \n replaced with +
+     * @throws UnsupportedEncodingException
+     */
+    private String urlSafe(String search) {
+        if (StringUtils.isEmpty(search)) {
+            return "";
+        } else {
+            String cleaned = search.replace("\\n", " ");
+            log.info("Searching using " + cleaned);
+            return cleaned;
+        }
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Unable to process the request.")
