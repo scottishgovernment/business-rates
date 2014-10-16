@@ -1,0 +1,10 @@
+application:
+   name: business-rate-rest-service
+
+saa:
+  url: http://staging.saa.gov.uk/shared/webservices/vr.php?search_term={search}
+  proxyHost:
+  proxyPort: 80
+
+server:
+  port: 9093
