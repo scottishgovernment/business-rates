@@ -22,10 +22,10 @@ public class ProxyConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyConfiguration.class);
 
-    @Value("${http.proxyHost}")
+    @Value("${saa.proxyHost}")
     private String proxyHost = null;
 
-    @Value("${http.proxyPort}")
+    @Value("${saa.proxyPort}")
     private int proxyPort = 80;
 
     @Bean
