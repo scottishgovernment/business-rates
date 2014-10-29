@@ -12,6 +12,8 @@ public class Property implements Serializable {
 
     private List<Occupier> occupier;
 
+    private LocalAuthority localAuthority;
+
     public String getRv() {
         return rv;
     }
@@ -34,5 +36,13 @@ public class Property implements Serializable {
 
     public void setOccupier(List<Occupier> occupier) {
         this.occupier = occupier;
+    }
+
+    public LocalAuthority getLocalAuthority() {
+        return localAuthority;
+    }
+
+    public void setLocalAuthority(LocalAuthority localAuthority) {
+        this.localAuthority = localAuthority;
     }
 }

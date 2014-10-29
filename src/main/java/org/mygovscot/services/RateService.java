@@ -2,6 +2,9 @@ package org.mygovscot.services;
 
 import java.io.UnsupportedEncodingException;
 
+import org.mygovscot.representations.LocalAuthority;
+import org.mygovscot.representations.LocalAuthorityLinks;
+import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +38,29 @@ public class RateService {
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
-        return template.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+        SearchResponse searchResponse = template.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+
+        for (Property property : searchResponse.getProperties()) {
+            property.setLocalAuthority(getLocalAuthority(property.getAddress()));
+        }
+
+        return searchResponse;
+    }
+
+    @RequestMapping(value = "authority", method = RequestMethod.GET)
+    @Cacheable("authority.search")
+    public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
+        LocalAuthority sampleAuthority = new LocalAuthority("S100000");
+        sampleAuthority.setCode(300);
+        sampleAuthority.setName("Edinburgh Village");
+
+        LocalAuthorityLinks authorityLinks = new LocalAuthorityLinks();
+        authorityLinks.setHomepage("http://www.edinburgh.gov.uk/");
+        authorityLinks.setTax("http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges");
+
+        sampleAuthority.setLinks(authorityLinks);
+
+        return sampleAuthority;
     }
 
     /**
