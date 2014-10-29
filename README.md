@@ -23,7 +23,17 @@ Replace {postcode} with a full or partial Scottish postcode.
                 {
                     "name": "SCOTTISH GOVERNMENT\nPROPERTY ADVICE DIVISION\nAREA 3G - NORTH\nVICTORIA QUAY\nEDINBURGH\nEH6 6QQ"
                 }
-            ]
+            ],
+            "localAuthority": {
+                "id": "S100000",
+                "name": "Edinburgh Village",
+                "code": 300,
+                "links": {
+                    "id": null,
+                    "homepage": "http://www.edinburgh.gov.uk/",
+                    "tax": "http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges"
+                }
+            }
         },
         {
             "rv": "5950",
@@ -32,7 +42,17 @@ Replace {postcode} with a full or partial Scottish postcode.
                 {
                     "name": "BANK OF SCOTLAND PER HBOS GROUP PROPERTY (RATING)\nHBOS PLC\nTRINITY ROAD\nHALIFAX\nWEST YORKSHIRE\nHX1 2RG"
                 }
-            ]
+            ],
+            "localAuthority": {
+                "id": "S100000",
+                "name": "Edinburgh Village",
+                "code": 300,
+                "links": {
+                    "id": null,
+                    "homepage": "http://www.edinburgh.gov.uk/",
+                    "tax": "http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges"
+                }
+            }
         }
     ]
 }
@@ -57,7 +77,17 @@ Replace {address} with a full or partial Scottish business address.  The address
                 {
                     "name": "SCOTTISH GOVERNMENT\nPROPERTY ADVICE DIVISION\nAREA 3G - NORTH\nVICTORIA QUAY\nEDINBURGH\nEH6 6QQ"
                 }
-            ]
+            ],
+            "localAuthority": {
+                "id": "S100000",
+                "name": "Edinburgh Village",
+                "code": 300,
+                "links": {
+                    "id": null,
+                    "homepage": "http://www.edinburgh.gov.uk/",
+                    "tax": "http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges"
+                }
+            }
         }
     ]
 }
