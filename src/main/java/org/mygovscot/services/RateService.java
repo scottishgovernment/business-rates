@@ -3,7 +3,7 @@ package org.mygovscot.services;
 import java.io.UnsupportedEncodingException;
 
 import org.mygovscot.representations.LocalAuthority;
-import org.mygovscot.representations.LocalAuthorityLinks;
+import org.mygovscot.representations.Postcode;
 import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
 import org.slf4j.Logger;
@@ -26,13 +26,16 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/address")
 public class RateService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RateService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RateService.class);
 
     @Autowired
     private RestTemplate template;
 
     @Value("${saa.url}")
     private String saaUrl;
+
+    @Value("${geo-search.url}")
+    private String geoUrl;
 
     @RequestMapping(method = RequestMethod.GET)
     @Cacheable("saa.search")
@@ -50,17 +53,34 @@ public class RateService {
     @RequestMapping(value = "authority", method = RequestMethod.GET)
     @Cacheable("authority.search")
     public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
-        LocalAuthority sampleAuthority = new LocalAuthority("S100000");
-        sampleAuthority.setCode(300);
-        sampleAuthority.setName("Edinburgh Village");
 
-        LocalAuthorityLinks authorityLinks = new LocalAuthorityLinks();
-        authorityLinks.setHomepage("http://www.edinburgh.gov.uk/");
-        authorityLinks.setTax("http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges");
+        String postcode = getPostcode(address);
+        Postcode code = template.getForObject(geoUrl, Postcode.class, postcode);
 
-        sampleAuthority.setLinks(authorityLinks);
+        LOG.debug("For postcode {} found LA: {}", postcode, code);
 
-        return sampleAuthority;
+        if (code != null) {
+            return code.getLocalAuthority();
+        } else {
+            return null;
+        }
+    }
+
+    String getPostcode(String address) {
+        LOG.debug("Parsing address for postcode {}", address);
+
+        String postcode = null;
+        if (address.contains("\n")) {
+            String[] addressParts = address.split("\\n");
+            postcode = addressParts[addressParts.length - 1];
+        } else {
+            postcode = address;
+        }
+        postcode = postcode.replace(" ", "").toUpperCase();
+
+        LOG.debug("Postcode ----{}----", postcode);
+
+        return postcode;
     }
 
     /**
@@ -78,7 +98,7 @@ public class RateService {
             return "";
         } else {
             String cleaned = search.replace("\\n", " ");
-            LOGGER.debug("Searching using " + cleaned);
+            LOG.debug("Searching using " + cleaned);
             return cleaned;
         }
     }

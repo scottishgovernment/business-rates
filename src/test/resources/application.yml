@@ -6,5 +6,8 @@ saa:
   proxyHost:
   proxyPort: 80
 
+geo-search:
+  url: http://betaweb.digital.gov.uk:9092/postcodes/{postcode}
+  
 server:
   port: 9990

@@ -30,5 +30,13 @@ public class RateServiceTest {
         rateService.search("");
         Assert.fail("Should throw HttpClientErrorException because search is empty");
     }
-    
+
+    @Test
+    public void getPostcodeTest() {
+        String postcode = rateService.getPostcode("ONE\nTWO\nTHREE");
+        Assert.assertEquals("THREE", postcode);
+        postcode = rateService.getPostcode("ONE");
+        Assert.assertEquals("ONE", postcode);
+    }
+
 }
