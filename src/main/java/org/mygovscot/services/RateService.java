@@ -9,6 +9,7 @@ import org.mygovscot.representations.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,12 @@ public class RateService {
     private static final Logger LOG = LoggerFactory.getLogger(RateService.class);
 
     @Autowired
-    private RestTemplate template;
+    @Qualifier("geoSearchRestTemplate")
+    private RestTemplate geoSearchTemplate;
+
+    @Autowired
+    @Qualifier("saaRestTemplate")
+    private RestTemplate saaTemplate;
 
     @Value("${saa.url}")
     private String saaUrl;
@@ -41,7 +47,7 @@ public class RateService {
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
-        SearchResponse searchResponse = template.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+        SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
 
         for (Property property : searchResponse.getProperties()) {
             property.setLocalAuthority(getLocalAuthority(property.getAddress()));
@@ -55,7 +61,7 @@ public class RateService {
     public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
 
         String postcode = getPostcode(address);
-        Postcode code = template.getForObject(geoUrl, Postcode.class, postcode);
+        Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
 
         LOG.debug("For postcode {} found LA: {}", postcode, code);
 

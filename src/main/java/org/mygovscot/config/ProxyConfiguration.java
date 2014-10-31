@@ -23,14 +23,28 @@ public class ProxyConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(ProxyConfiguration.class);
 
     @Value("${saa.proxyHost}")
-    private String proxyHost = null;
+    private String saaProxyHost = null;
 
     @Value("${saa.proxyPort}")
-    private int proxyPort = 80;
+    private int saaProxyPort = 80;
 
-    @Bean
-    RestTemplate template() {
+    @Value("${geo-search.proxyHost}")
+    private String geoSearchProxyHost = null;
 
+    @Value("${geo-search.proxyPort}")
+    private int geoSearchProxyPort = 80;
+
+    @Bean(name = "saaRestTemplate")
+    RestTemplate saaRestTemplate() {
+        return getRestTemplate(saaProxyHost, saaProxyPort);
+    }
+
+    @Bean(name = "geoSearchRestTemplate")
+    RestTemplate postcodeRestTemplate() {
+        return getRestTemplate(geoSearchProxyHost, geoSearchProxyPort);
+    }
+
+    private RestTemplate getRestTemplate(String proxyHost, int proxyPort) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 

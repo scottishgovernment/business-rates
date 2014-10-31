@@ -13,11 +13,11 @@ public class ProxyConfigurationTest {
     @Test
     public void withProxyTest() {
         ProxyConfiguration configuration = new ProxyConfiguration();
-        ReflectionTestUtils.setField(configuration, "proxyHost", "192.168.41.8");
+        ReflectionTestUtils.setField(configuration, "saaProxyHost", "192.168.41.8");
 
-        Assert.assertTrue(configuration.template().getRequestFactory() instanceof SimpleClientHttpRequestFactory);
+        Assert.assertTrue(configuration.saaRestTemplate().getRequestFactory() instanceof SimpleClientHttpRequestFactory);
 
-        SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory) configuration.template().getRequestFactory();
+        SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory) configuration.saaRestTemplate().getRequestFactory();
         Proxy proxy = (Proxy) ReflectionTestUtils.getField(requestFactory, "proxy");
 
         Assert.assertNotNull(proxy);
@@ -28,9 +28,9 @@ public class ProxyConfigurationTest {
     @Test
     public void withoutProxyTest() {
         ProxyConfiguration configuration = new ProxyConfiguration();
-        ReflectionTestUtils.setField(configuration, "proxyHost", "");
+        ReflectionTestUtils.setField(configuration, "saaProxyHost", "");
 
-        ClientHttpRequestFactory requestFactory = configuration.template().getRequestFactory();
+        ClientHttpRequestFactory requestFactory = configuration.saaRestTemplate().getRequestFactory();
 
         Assert.assertNull(ReflectionTestUtils.getField(requestFactory, "proxy"));
 
