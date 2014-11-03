@@ -28,10 +28,10 @@ public class ProxyConfiguration {
     @Value("${saa.proxyPort}")
     private int saaProxyPort = 80;
 
-    @Value("${geo-search.proxyHost}")
+    @Value("${geo_search.proxyHost}")
     private String geoSearchProxyHost = null;
 
-    @Value("${geo-search.proxyPort}")
+    @Value("${geo_search.proxyPort}")
     private int geoSearchProxyPort = 80;
 
     @Bean(name = "saaRestTemplate")

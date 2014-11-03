@@ -40,7 +40,7 @@ public class RateService {
     @Value("${saa.url}")
     private String saaUrl;
 
-    @Value("${geo-search.url}")
+    @Value("${geo_search.url}")
     private String geoUrl;
 
     @RequestMapping(method = RequestMethod.GET)
