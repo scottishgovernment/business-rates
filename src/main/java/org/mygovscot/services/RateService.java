@@ -1,6 +1,8 @@
 package org.mygovscot.services;
 
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.mygovscot.representations.LocalAuthority;
 import org.mygovscot.representations.Postcode;
@@ -49,10 +51,17 @@ public class RateService {
 
         SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
 
+        List<Property> validProperties = new LinkedList<Property>();
+
         for (Property property : searchResponse.getProperties()) {
-            property.setLocalAuthority(getLocalAuthority(property.getAddress()));
+            LocalAuthority authority = getLocalAuthority(property.getAddress());
+            if (authority != null) {
+                property.setLocalAuthority(authority);
+                validProperties.add(property);
+            }
         }
 
+        searchResponse.setProperties(validProperties);
         return searchResponse;
     }
 
@@ -61,15 +70,20 @@ public class RateService {
     public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
 
         String postcode = getPostcode(address);
-        Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
+        try {
+            Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
+            LOG.debug("For postcode {} found LA: {}", postcode, code);
 
-        LOG.debug("For postcode {} found LA: {}", postcode, code);
-
-        if (code != null) {
-            return code.getLocalAuthority();
-        } else {
+            if (code != null) {
+                return code.getLocalAuthority();
+            } else {
+                return null;
+            }
+        } catch (HttpClientErrorException e) {
+            LOG.warn("Unable to find a local authority for postcode " + postcode, e);
             return null;
         }
+
     }
 
     String getPostcode(String address) {

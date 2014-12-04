@@ -5,4 +5,4 @@ Priority: optional
 Architecture: all
 Description: [[description]]
 Maintainer: tim.squires@scotland.gsi.gov.uk
-Depends: java-jdk
+Recommends: java-jdk
