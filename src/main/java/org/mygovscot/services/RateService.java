@@ -8,6 +8,8 @@ import org.mygovscot.representations.LocalAuthority;
 import org.mygovscot.representations.Postcode;
 import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
+import org.mygovscot.services.exceptions.AddressNotFoundException;
+import org.mygovscot.services.exceptions.TooManyResultsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,20 +51,34 @@ public class RateService {
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
-        SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+        try {
+            SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
 
-        List<Property> validProperties = new LinkedList<Property>();
+            List<Property> validProperties = new LinkedList<Property>();
 
-        for (Property property : searchResponse.getProperties()) {
-            LocalAuthority authority = getLocalAuthority(property.getAddress());
-            if (authority != null) {
-                property.setLocalAuthority(authority);
-                validProperties.add(property);
+            for (Property property : searchResponse.getProperties()) {
+                LocalAuthority authority = getLocalAuthority(property.getAddress());
+                if (authority != null) {
+                    property.setLocalAuthority(authority);
+                    validProperties.add(property);
+                }
             }
-        }
 
-        searchResponse.setProperties(validProperties);
-        return searchResponse;
+            searchResponse.setProperties(validProperties);
+            return searchResponse;
+        } catch (HttpClientErrorException e) {
+            LOG.warn("Problem processing address search: {} ({})", e.getResponseBodyAsString(), e.getStatusCode());
+            
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                throw new AddressNotFoundException(e.getResponseBodyAsString());
+            }
+            
+            if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+                throw new TooManyResultsException(e.getResponseBodyAsString());
+            }
+            
+            throw e;
+        }
     }
 
     @RequestMapping(value = "authority", method = RequestMethod.GET)
@@ -105,11 +121,10 @@ public class RateService {
 
     /**
      * The SAA search requires the address to be + separated, not \n separated.
-     * They supply the addresses with \n so to save the client from replacing
+     * They supply the addresses with \n so to save the web client from replacing
      * the characters, this does it here.
-     * 
-     * @param search
-     *            The client requested search
+     *
+     * @param search The client requested search
      * @return The search but with \n replaced with +
      * @throws UnsupportedEncodingException
      */
@@ -123,10 +138,21 @@ public class RateService {
         }
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Unable to process the request.")
-    @ExceptionHandler(HttpClientErrorException.class)
-    public void forbidden() {
-        // Nothing to do
+    @ExceptionHandler(AddressNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Address not found")
+    public String forbidden() {
+        return "Address not found";
     }
 
+    @ExceptionHandler(TooManyResultsException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Too many results")
+    public String tooManyResults() {
+        return "Too many addresses found.";
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Unable to process request")
+    public String error() {
+        return "error.";
+    }
 }

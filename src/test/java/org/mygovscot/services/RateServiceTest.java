@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mygovscot.Application;
 import org.mygovscot.representations.SearchResponse;
+import org.mygovscot.services.exceptions.AddressNotFoundException;
+import org.mygovscot.services.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
@@ -25,10 +27,16 @@ public class RateServiceTest {
         Assert.assertEquals("Found", search.getMessage());
     }
 
-    @Test(expected = HttpClientErrorException.class)
+    @Test(expected = TooManyResultsException.class)
     public void badServiceTest() {
         rateService.search("");
-        Assert.fail("Should throw HttpClientErrorException because search is empty");
+        Assert.fail("Should throw an exception because search is empty");
+    }
+
+    @Test(expected = AddressNotFoundException.class)
+    public void badAddressTest() {
+        rateService.search("THISADDRESSDOESNOTEXIST");
+        Assert.fail("Should throw an exception because search is empty");
     }
 
     @Test
