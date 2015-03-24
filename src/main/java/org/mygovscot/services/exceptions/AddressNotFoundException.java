@@ -2,7 +2,7 @@ package org.mygovscot.services.exceptions;
 
 public class AddressNotFoundException extends RuntimeException {
     
-    private String search;
+    private final String search;
 
     public AddressNotFoundException(String search) {
         this.search = search;

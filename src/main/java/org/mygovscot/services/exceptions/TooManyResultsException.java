@@ -2,7 +2,7 @@ package org.mygovscot.services.exceptions;
 
 public class TooManyResultsException extends RuntimeException {
 
-    private String search;
+    private final String search;
 
     public TooManyResultsException(String search) {
         this.search = search;

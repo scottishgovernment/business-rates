@@ -9,10 +9,10 @@
 		</encoder>
 	</appender>
 
-	<logger name="org.mygovscot" level="DEBUG" additivity="false">
+	<logger name="org.mygovscot" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
-	<logger name="org.springframework.web" level="DEBUG" additivity="false">
+	<logger name="org.springframework.web" level="WARN" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
