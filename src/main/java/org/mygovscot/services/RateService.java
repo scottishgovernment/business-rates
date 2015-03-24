@@ -1,31 +1,25 @@
 package org.mygovscot.services;
 
-import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.mygovscot.representations.LocalAuthority;
 import org.mygovscot.representations.Postcode;
 import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
-import org.mygovscot.services.exceptions.AddressNotFoundException;
-import org.mygovscot.services.exceptions.TooManyResultsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/address")
@@ -51,34 +45,20 @@ public class RateService {
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
-        try {
-            SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+        SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
 
-            List<Property> validProperties = new LinkedList<Property>();
+        List<Property> validProperties = new LinkedList<Property>();
 
-            for (Property property : searchResponse.getProperties()) {
-                LocalAuthority authority = getLocalAuthority(property.getAddress());
-                if (authority != null) {
-                    property.setLocalAuthority(authority);
-                    validProperties.add(property);
-                }
+        for (Property property : searchResponse.getProperties()) {
+            LocalAuthority authority = getLocalAuthority(property.getAddress());
+            if (authority != null) {
+                property.setLocalAuthority(authority);
+                validProperties.add(property);
             }
-
-            searchResponse.setProperties(validProperties);
-            return searchResponse;
-        } catch (HttpClientErrorException e) {
-            LOG.warn("Problem processing address search: {} ({})", e.getResponseBodyAsString(), e.getStatusCode());
-            
-            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                throw new AddressNotFoundException(e.getResponseBodyAsString());
-            }
-            
-            if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-                throw new TooManyResultsException(e.getResponseBodyAsString());
-            }
-            
-            throw e;
         }
+
+        searchResponse.setProperties(validProperties);
+        return searchResponse;
     }
 
     @RequestMapping(value = "authority", method = RequestMethod.GET)
@@ -86,20 +66,15 @@ public class RateService {
     public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
 
         String postcode = getPostcode(address);
-        try {
-            Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
-            LOG.debug("For postcode {} found LA: {}", postcode, code);
 
-            if (code != null) {
-                return code.getLocalAuthority();
-            } else {
-                return null;
-            }
-        } catch (HttpClientErrorException e) {
-            LOG.warn("Unable to find a local authority for postcode " + postcode, e);
+        Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
+        LOG.debug("For postcode {} found LA: {}", postcode, code);
+
+        if (code != null) {
+            return code.getLocalAuthority();
+        } else {
             return null;
         }
-
     }
 
     String getPostcode(String address) {
@@ -136,23 +111,5 @@ public class RateService {
             LOG.debug("Searching using " + cleaned);
             return cleaned;
         }
-    }
-
-    @ExceptionHandler(AddressNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Address not found")
-    public String forbidden() {
-        return "Address not found";
-    }
-
-    @ExceptionHandler(TooManyResultsException.class)
-    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Too many results")
-    public String tooManyResults() {
-        return "Too many addresses found.";
-    }
-
-    @ExceptionHandler(HttpClientErrorException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Unable to process request")
-    public String error() {
-        return "error.";
     }
 }

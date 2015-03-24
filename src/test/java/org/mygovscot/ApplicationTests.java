@@ -1,5 +1,7 @@
 package org.mygovscot;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +18,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -58,5 +57,19 @@ public class ApplicationTests {
 
         restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(converter);
+    }
+
+    public void badServiceTest() {
+        ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "EH1");
+        String body = singleResponse.getBody();
+
+        Assert.assertEquals(HttpStatus.FORBIDDEN, singleResponse.getStatusCode());
+    }
+
+    public void badAddressTest() {
+        ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "THISADDRESSDOESNOTEXIST");
+        String body = singleResponse.getBody();
+
+        Assert.assertEquals(HttpStatus.NOT_FOUND, singleResponse.getStatusCode());
     }
 }
