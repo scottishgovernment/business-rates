@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -59,6 +60,7 @@ public class ApplicationTests {
         restTemplate.getMessageConverters().add(converter);
     }
 
+    @Test(expected = HttpClientErrorException.class)
     public void badServiceTest() {
         ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "EH1");
         String body = singleResponse.getBody();
@@ -66,10 +68,19 @@ public class ApplicationTests {
         Assert.assertEquals(HttpStatus.FORBIDDEN, singleResponse.getStatusCode());
     }
 
+    @Test(expected = HttpClientErrorException.class)
     public void badAddressTest() {
         ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "THISADDRESSDOESNOTEXIST");
         String body = singleResponse.getBody();
 
         Assert.assertEquals(HttpStatus.NOT_FOUND, singleResponse.getStatusCode());
+    }
+
+    @Test
+    public void badAddressTest2() {
+        ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "high street glasgow");
+        String body = singleResponse.getBody();
+
+        Assert.assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
     }
 }
