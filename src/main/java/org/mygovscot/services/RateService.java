@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/address")
@@ -40,24 +43,30 @@ public class RateService {
 
     @Value("${geo_search.url}")
     private String geoUrl;
+    private Consumer<Property> action;
 
     @RequestMapping(method = RequestMethod.GET)
     @Cacheable("saa.search")
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
+        // Retrieve a list of properties from the SAA feed
         SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
 
-        List<Property> validProperties = new LinkedList<Property>();
-
-        for (Property property : searchResponse.getProperties()) {
+        // Populate the local authority from our geo-search service
+        searchResponse.getProperties().parallelStream().forEach(property -> {
             LocalAuthority authority = getLocalAuthority(property.getAddress());
             if (authority != null) {
                 property.setLocalAuthority(authority);
-                validProperties.add(property);
             }
-        }
+        });
 
-        searchResponse.setProperties(validProperties);
+        // Filter the list of properties for any that don't have local authorities
+        searchResponse.setProperties(
+                searchResponse.getProperties().parallelStream()
+                        .filter(p -> p.getLocalAuthority() != null)
+                        .sorted((p1, p2) -> p1.getAddress().compareTo(p2.getAddress()))
+                        .collect(Collectors.toList()));
+
         return searchResponse;
     }
 
@@ -65,14 +74,19 @@ public class RateService {
     @Cacheable("authority.search")
     public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
 
-        String postcode = getPostcode(address);
+        try {
+            String postcode = getPostcode(address);
 
-        Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
-        LOG.debug("For postcode {} found LA: {}", postcode, code);
+            Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
+            LOG.debug("For postcode {} found LA: {}", postcode, code);
 
-        if (code != null) {
-            return code.getLocalAuthority();
-        } else {
+            if (code != null) {
+                return code.getLocalAuthority();
+            } else {
+                return null;
+            }
+        } catch (HttpClientErrorException e) {
+            LOG.error("Unable to retrieve local authority details for address {} [{}]", address, e.getLocalizedMessage());
             return null;
         }
     }
