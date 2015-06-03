@@ -74,13 +74,13 @@
                 <configuration>
                     <dataSet>
                         <data>
-                            <src>${basedir}/src/deb/init/business-rates-rest-service.conf</src>
+                            <src>${basedir}/src/deb/init/business-rates.conf</src>
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
                                 <prefix>/etc/init</prefix>
-                                <user>loader</user>
-                                <group>loader</group>
+                                <user>business-rates</user>
+                                <group>nogroup</group>
                             </mapper>
                         </data>
                         <data>
@@ -88,7 +88,7 @@
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
-                                <prefix>/beta/business-rates-rest-service</prefix>
+                                <prefix>/opt/business-rates</prefix>
                             </mapper>
                         </data>
                         <data>
@@ -96,9 +96,9 @@
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
-                                <prefix>/beta/business-rates-rest-service</prefix>
-                                <user>loader</user>
-                                <group>loader</group>
+                                <prefix>/opt/business-rates</prefix>
+                                <user>business-rates</user>
+                                <group>nogroup</group>
                             </mapper>
                         </data>
                         <data>
@@ -111,8 +111,8 @@
                             </paths>
                             <mapper>
                                 <type>perm</type>
-                                <user>loader</user>
-                                <group>loader</group>
+                                <user>business-rates</user>
+                                <group>nogroup</group>
                             </mapper>
                         </data>
                     </dataSet>

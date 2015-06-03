@@ -1,0 +1,17 @@
+#!/bin/sh
+
+adduser \
+  --quiet \
+  --system \
+  --home /opt/business-rates \
+  --no-create-home \
+  --shell /bin/bash \
+  --group \
+  --gecos "MyGov Business Rates Service" \
+  business-rates
+
+mkdir -p /var/log/business-rates
+chmod 755 /var/log/business-rates
+chown business-rates:nogroup /var/log/business-rates
+
+service business-rates start
