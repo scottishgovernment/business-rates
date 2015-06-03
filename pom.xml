@@ -1,197 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>scot.mygov</groupId>
-    <artifactId>mygov-parent</artifactId>
-    <version>2</version>
-  </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>scot.mygov</groupId>
-  <artifactId>business-rates</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+    <parent>
+        <groupId>scot.mygov</groupId>
+        <artifactId>mygov-parent</artifactId>
+        <version>2</version>
+    </parent>
 
-  <name>business-rates-rest-service</name>
-  <description>Service to retrieve business rates for properties</description>
+    <groupId>org.mygovscot.business-rates</groupId>
+    <artifactId>business-rates</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <dependencies>
+    <name>Business Rates Service</name>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <version>1.2.2.RELEASE</version>
-    </dependency>
+    <modules>
+        <module>service</module>
+        <module>business-rates-deb</module>
+    </modules>
 
-    <dependency>
-      <groupId>org.mygovscot.beta</groupId>
-      <artifactId>beta-config</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-      <version>4.1.5.RELEASE</version>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache</artifactId>
-      <version>2.7.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <version>1.2.2.RELEASE</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
-
-  <build>
-    <plugins>
-
-        <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.4.201502262128</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-  </build>
-
-  <profiles>
-    <profile>
-      <id>debian</id>
-      <build>
+    <build>
         <plugins>
-          <plugin>
-            <artifactId>jdeb</artifactId>
-            <groupId>org.vafer</groupId>
-            <version>1.2</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>jdeb</goal>
-                </goals>
-                <configuration>
-                  <verbose>true</verbose>
-                  <controlDir>${basedir}/src/deb/control</controlDir>
-                  <dataSet>
-                    <data>
-                      <src>${basedir}/src/deb/init/business-rates-rest-service.conf</src>
-                      <type>file</type>
-                      <mapper>
-                        <type>perm</type>
-                        <prefix>/etc/init</prefix>
-                        <user>loader</user>
-                        <group>loader</group>
-                      </mapper>
-                    </data>
-                    <data>
-                      <src>${project.build.directory}/${project.build.finalName}.jar</src>
-                      <type>file</type>
-                      <mapper>
-                        <type>perm</type>
-                        <prefix>/beta/business-rates-rest-service</prefix>
-                      </mapper>
-                    </data>
-                    <data>
-                      <src>${basedir}/src/deb/run.sh</src>
-                      <type>file</type>
-                      <mapper>
-                        <type>perm</type>
-                        <prefix>/beta/business-rates-rest-service</prefix>
-                        <user>loader</user>
-                        <group>loader</group>
-                      </mapper>
-                    </data>
-                    <data>
-                      <type>template</type>
-                      <paths>
-                        <path>etc/${project.artifactId}</path>
-                        <path>var/lib/${project.artifactId}</path>
-                        <path>var/log/${project.artifactId}</path>
-                        <path>var/run/${project.artifactId}</path>
-                      </paths>
-                      <mapper>
-                        <type>perm</type>
-                        <user>loader</user>
-                        <group>loader</group>
-                      </mapper>
-                    </data>
-                  </dataSet>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <version>1.7</version>
-            <executions>
-              <execution>
-                <id>regex-property</id>
-                <goals>
-                  <goal>regex-property</goal>
-                </goals>
-                <configuration>
-                  <name>deb.version</name>
-                  <value>${project.version}</value>
-                  <regex>-SNAPSHOT</regex>
-                  <replacement>~SNAPSHOT</replacement>
-                  <failIfNoMatch>false</failIfNoMatch>
-                  <!--<failIfNoMatch>true</failIfNoMatch> -->
-                </configuration>
-              </execution>
-              <execution>
-                <id>attach-artifacts</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>attach-artifact</goal>
-                </goals>
-                <configuration>
-                  <artifacts>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}_${deb.version}_all.deb</file>
-                      <type>deb</type>
-                    </artifact>
-                  </artifacts>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.4.201502262128</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-      </build>
-    </profile>
-  </profiles>
+    </build>
+
 </project>
