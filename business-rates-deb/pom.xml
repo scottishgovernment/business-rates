@@ -15,6 +15,10 @@
     <name>Business-Rates Debian Package</name>
     <description>Debian package for Business-Rates REST API.</description>
 
+    <properties>
+        <deployedName>business-rates</deployedName>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -22,6 +26,12 @@
             <artifactId>business-rates-service</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.mygovscot.utils</groupId>
+            <artifactId>mygovscot_util_logging</artifactId>
+            <version>${mygovscot.utils.version}</version>
+        </dependency>        
 
     </dependencies>
 
@@ -63,8 +73,50 @@
                             <includeScope>runtime</includeScope>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-logging</id>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.mygovscot.utils</groupId>
+                                    <artifactId>mygovscot_util_logging</artifactId>
+                                    <version>${mygovscot.utils.version}</version>
+                                    <outputDirectory>${basedir}/target/logging</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${basedir}/target/config</outputDirectory>
+                    <resources>
+                        <resource>
+                            <directory>${basedir}/target/logging</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>*.xml</include>
+                            </includes>
+                        </resource>
+                    </resources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>            
 
             <plugin>
                 <artifactId>jdeb</artifactId>
@@ -91,6 +143,15 @@
                                 <prefix>/opt/business-rates</prefix>
                             </mapper>
                         </data>
+                        <data>
+                            <src>${basedir}/target/config/logback_prod.xml</src>
+                            <dst>logback.xml</dst>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <prefix>/opt/publishing</prefix>
+                            </mapper>
+                        </data>                        
                         <data>
                             <src>${basedir}/src/deb/run.sh</src>
                             <type>file</type>
