@@ -160,6 +160,7 @@
                                 <prefix>/opt/business-rates</prefix>
                                 <user>business-rates</user>
                                 <group>nogroup</group>
+                                <filemode>755</filemode>
                             </mapper>
                         </data>
                         <data>
