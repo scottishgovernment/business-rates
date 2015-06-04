@@ -149,7 +149,7 @@
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
-                                <prefix>/opt/publishing</prefix>
+                                <prefix>/opt/business-rates</prefix>
                             </mapper>
                         </data>                        
                         <data>
