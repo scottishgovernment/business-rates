@@ -30,8 +30,8 @@
         <dependency>
             <groupId>org.mygovscot.utils</groupId>
             <artifactId>mygovscot_util_logging</artifactId>
-            <version>${mygovscot.utils.version}</version>
-        </dependency>        
+            <version>1.0.5-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
@@ -83,7 +83,6 @@
                                 <artifactItem>
                                     <groupId>org.mygovscot.utils</groupId>
                                     <artifactId>mygovscot_util_logging</artifactId>
-                                    <version>${mygovscot.utils.version}</version>
                                     <outputDirectory>${basedir}/target/logging</outputDirectory>
                                 </artifactItem>
                             </artifactItems>

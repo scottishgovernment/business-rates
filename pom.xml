@@ -17,10 +17,6 @@
 
     <name>Business Rates Service</name>
 
-    <properties>
-        <mygovscot.utils.version>1.0.5-SNAPSHOT</mygovscot.utils.version>
-    </properties>    
-
     <modules>
         <module>service</module>
         <module>business-rates-deb</module>
