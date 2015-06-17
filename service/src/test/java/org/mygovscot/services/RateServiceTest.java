@@ -1,6 +1,7 @@
 package org.mygovscot.services;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mygovscot.representations.LocalAuthority;
@@ -14,14 +15,24 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 @DirtiesContext
 public class RateServiceTest {
 
+    private RateService service;
+
+    @Before
+    public void setUp() throws IOException {
+        LocalAuthorities authorities = new LocalAuthorities();
+        authorities.load();
+        service = new RateService(authorities);
+    }
+
     @Test
-    public void serviceTest() {
+    public void serviceTest() throws IOException {
         Postcode postcode = new Postcode();
         postcode.setPostcode("EH6 6QQ");
 
@@ -44,7 +55,6 @@ public class RateServiceTest {
         Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
         Mockito.when(saaTemplate.getForObject("saaUrl", SearchResponse.class, "EH66QQ")).thenReturn(searchResponse);
 
-        RateService service = new RateService();
         ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
         ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
         ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
@@ -75,7 +85,6 @@ public class RateServiceTest {
         Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
         Mockito.when(saaTemplate.getForObject("saaUrl", SearchResponse.class, "EH66QQ")).thenReturn(searchResponse);
 
-        RateService service = new RateService();
         ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
         ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
         ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
@@ -86,11 +95,9 @@ public class RateServiceTest {
 
     @Test
     public void getPostcodeTest() {
-        RateService rateService = new RateService();
-
-        String postcode = rateService.getPostcode("ONE\nTWO\nTHREE");
+        String postcode = service.getPostcode("ONE\nTWO\nTHREE");
         Assert.assertEquals("THREE", postcode);
-        postcode = rateService.getPostcode("ONE");
+        postcode = service.getPostcode("ONE");
         Assert.assertEquals("ONE", postcode);
     }
 
@@ -100,7 +107,6 @@ public class RateServiceTest {
         RestTemplate template = Mockito.mock(RestTemplate.class);
         Mockito.when(template.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.NOT_FOUND, ""));
 
-        RateService service = new RateService();
         ReflectionTestUtils.setField(service, "geoSearchTemplate", template);
         ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
 

@@ -1,13 +1,12 @@
 package org.mygovscot.representations;
 
-import java.io.Serializable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Postcode implements Serializable {
@@ -17,13 +16,7 @@ public class Postcode implements Serializable {
 
     private String postcode;
 
-    private double latitude;
-
-    private double longitude;
-
     private String district;
-
-    private LocalAuthority localAuthority;
 
     public Postcode() {
     }
@@ -38,30 +31,6 @@ public class Postcode implements Serializable {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public LocalAuthority getLocalAuthority() {
-        return localAuthority;
-    }
-
-    public void setLocalAuthority(LocalAuthority localAuthority) {
-        this.localAuthority = localAuthority;
     }
 
     public String getDistrict() {

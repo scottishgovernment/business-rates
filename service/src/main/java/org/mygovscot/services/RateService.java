@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,13 @@ public class RateService {
 
     @Value("${geo_search.url}")
     private String geoUrl;
+
+    private LocalAuthorities authorities;
+
+    @Autowired
+    public RateService(LocalAuthorities authorities) throws IOException {
+        this.authorities = authorities;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     @Cacheable("saa.search")
@@ -71,23 +79,20 @@ public class RateService {
         return searchResponse;
     }
 
-    @RequestMapping(value = "authority", method = RequestMethod.GET)
-    @Cacheable("authority.search")
-    public LocalAuthority getLocalAuthority(@RequestParam(value = "address", required = true) String address) {
+    public LocalAuthority getLocalAuthority(String address) {
+        String postcode = getPostcode(address);
+        String authorityId = getLocalAuthorityId(postcode);
+        return authorities.getAuthority(authorityId);
+    }
 
+    public String getLocalAuthorityId(String postcode) {
         try {
-            String postcode = getPostcode(address);
-
             Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
-            LOG.debug("For postcode {} found LA: {}", postcode, code);
-
-            if (code != null) {
-                return code.getLocalAuthority();
-            } else {
-                return null;
-            }
+            String authorityId = code != null ? code.getDistrict() : "";
+            LOG.debug("For postcode {} found LA: {}", postcode, authorityId);
+            return authorityId;
         } catch (HttpClientErrorException e) {
-            LOG.error("Unable to retrieve local authority details for address {} [{}]", address, e.getLocalizedMessage());
+            LOG.error("Unable to retrieve local authority details for address {} [{}]", postcode, e.getLocalizedMessage());
             LOG.debug("Geo Search Error", e);
             return null;
         }

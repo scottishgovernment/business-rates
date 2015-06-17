@@ -43,12 +43,6 @@ public class BeanTest  {
         postcode.setDistrict("district");
         assertEquals("district", postcode.getDistrict());
 
-        postcode.setLatitude(1.0);
-        assertEquals(1.00, postcode.getLatitude(), 0.1);
-
-        postcode.setLongitude(2.0);
-        assertEquals(2.0, postcode.getLongitude(), 0.1);
-
         postcode.setPostcode("postcode");
         assertEquals("postcode", postcode.getPostcode());
     }
