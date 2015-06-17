@@ -7,9 +7,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.commons.io.IOUtils;
 import org.mygovscot.representations.LocalAuthority;
 import org.mygovscot.representations.LocalAuthorityLinks;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -24,8 +21,6 @@ import java.util.Map;
  */
 @Repository
 public class LocalAuthorities {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalAuthorities.class);
 
     public static final String AUTHORITIES_JSON = "/local-authorities.json";
 
