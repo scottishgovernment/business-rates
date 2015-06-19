@@ -6,3 +6,5 @@ Architecture: all
 Description: [[description]]
 Maintainer: tim.squires@scotland.gsi.gov.uk
 Recommends: java-jdk
+Replaces: business-rates-rest-service
+Conflicts: business-rates-rest-service
