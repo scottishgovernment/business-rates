@@ -2,12 +2,15 @@ application:
    name: business_rate_rest_service
 
 saa:
-  url: http://staging.saa.gov.uk/shared/webservices/vr.php?search_term={search}
+  url: https://staging.govusers.saa.gov.uk/shared/webservices/vr.php?search_term={search}&key={key}
+  key:
+  username:
+  password:
   proxyHost:
   proxyPort: 80
 
 geo_search:
-  url: http://betaweb.digital.gov.uk:9092/postcodes/{postcode}
+  url: http://devsitapp01:9092/postcodes/{postcode}
   proxyHost:
   proxyPort: 80
 

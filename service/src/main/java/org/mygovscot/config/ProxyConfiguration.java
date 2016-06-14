@@ -1,8 +1,7 @@
 package org.mygovscot.config;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +13,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 @Configuration
 public class ProxyConfiguration {
@@ -27,6 +26,12 @@ public class ProxyConfiguration {
 
     @Value("${saa.proxyPort}")
     private int saaProxyPort = 80;
+
+    @Value("${saa.username}")
+    private String username = null;
+
+    @Value("${saa.password}")
+    private String password = null;
 
     @Value("${geo_search.proxyHost}")
     private String geoSearchProxyHost = null;
@@ -56,17 +61,15 @@ public class ProxyConfiguration {
 
         LOG.info("Proxy configuration = " + proxyHost + ":" + proxyPort);
 
-        if (StringUtils.isEmpty(proxyHost)) {
-            restTemplate = new RestTemplate();
-        } else {
-            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-            factory.setProxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
-
-            restTemplate = new RestTemplate(factory);
+        SimpleClientHttpRequestFactory requestFactory =
+                new SAAClientHttpRequestFactory(username, password);
+        if (!StringUtils.isEmpty(proxyHost)) {
+            requestFactory.setProxy(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort)));
         }
 
+        restTemplate = new RestTemplate(requestFactory);
         restTemplate.getMessageConverters().add(converter);
-
         return restTemplate;
     }
+
 }

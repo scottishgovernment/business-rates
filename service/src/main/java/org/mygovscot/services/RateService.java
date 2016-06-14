@@ -39,6 +39,9 @@ public class RateService {
     @Value("${saa.url}")
     private String saaUrl;
 
+    @Value("${saa.key}")
+    private String saaKey;
+
     @Value("${geo_search.url}")
     private String geoUrl;
 
@@ -54,7 +57,8 @@ public class RateService {
     public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
 
         // Retrieve a list of properties from the SAA feed
-        SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, urlSafe(search));
+        String postcode = urlSafe(search);
+        SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, postcode, saaKey);
 
         // Populate the local authority from our geo-search service
         searchResponse.getProperties().parallelStream().forEach(property -> {

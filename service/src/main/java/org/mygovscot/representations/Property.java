@@ -10,6 +10,8 @@ public class Property implements Serializable {
 
     private String address;
 
+    private int ua;
+
     private List<Occupier> occupier;
 
     private LocalAuthority localAuthority;
@@ -45,4 +47,13 @@ public class Property implements Serializable {
     public void setLocalAuthority(LocalAuthority localAuthority) {
         this.localAuthority = localAuthority;
     }
+
+    public int getUa() {
+        return ua;
+    }
+
+    public void setUa(int ua) {
+        this.ua = ua;
+    }
+
 }

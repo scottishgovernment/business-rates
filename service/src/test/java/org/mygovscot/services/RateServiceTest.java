@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 import org.mygovscot.representations.LocalAuthority;
 import org.mygovscot.representations.Postcode;
 import org.mygovscot.representations.Property;
@@ -18,6 +19,9 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
 @DirtiesContext
 public class RateServiceTest {
@@ -53,12 +57,13 @@ public class RateServiceTest {
 
         RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
         Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
-        Mockito.when(saaTemplate.getForObject("saaUrl", SearchResponse.class, "EH66QQ")).thenReturn(searchResponse);
+        Mockito.when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
 
         ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
         ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
         ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
         ReflectionTestUtils.setField(service, "saaUrl", "saaUrl");
+        ReflectionTestUtils.setField(service, "saaKey", "saaKey");
 
         SearchResponse search = service.search("EH66QQ");
         Assert.assertEquals(1, search.getProperties().size());
@@ -83,12 +88,13 @@ public class RateServiceTest {
 
         RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
         Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
-        Mockito.when(saaTemplate.getForObject("saaUrl", SearchResponse.class, "EH66QQ")).thenReturn(searchResponse);
+        Mockito.when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
 
         ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
         ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
         ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
         ReflectionTestUtils.setField(service, "saaUrl", "saaUrl");
+        ReflectionTestUtils.setField(service, "saaKey", "saaKey");
 
         SearchResponse search = service.search("EH66QQ");
     }

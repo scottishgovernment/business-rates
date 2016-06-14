@@ -3,6 +3,9 @@ application:
 
 saa:
   url: http://staging.saa.gov.uk/shared/webservices/vr.php?search_term={search}
+  key:
+  username:
+  password:
   proxyHost:
   proxyPort: 80
 
