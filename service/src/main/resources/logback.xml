@@ -12,11 +12,14 @@
 	<logger name="org.mygovscot" level="INFO" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
-	<logger name="org.springframework.web" level="WARN" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
+
+	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.springframework.context.support" level="WARN"/>
+	<logger name="org.hibernate.validator" level="INFO"/>
+	<logger name="net.sf.ehcache" level="INFO"/>
 
 	<root level="debug">
 		<appender-ref ref="STDOUT" />
 	</root>
+
 </configuration>
