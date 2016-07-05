@@ -9,10 +9,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="org.mygovscot" level="INFO" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
-
+	<logger name="org.mygovscot" level="INFO"/>
 	<logger name="org.springframework" level="INFO"/>
 	<logger name="org.springframework.context.support" level="WARN"/>
 	<logger name="org.hibernate.validator" level="INFO"/>

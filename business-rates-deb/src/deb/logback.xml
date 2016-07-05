@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/var/log/${deployedName}/${deployedName}.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>/var/log/business-rates/business-rates.%d{yyyy-MM-dd}.log</FileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <Pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger %msg %rEx{full} %n</Pattern>
-        </encoder>
-    </appender>
+  <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <File>/var/log/${deployedName}/${deployedName}.log</File>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>/var/log/business-rates/business-rates.%d{yyyy-MM-dd}.log</FileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <Pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger %msg %rEx{full} %n</Pattern>
+    </encoder>
+  </appender>
 
-    <root>
-        <level value="INFO"/>
-        <appender-ref ref="dailyRollingFileAppender"/>
-    </root>
+  <logger name="org.mygovscot" level="INFO"/>
+  <logger name="org.springframework" level="INFO"/>
+  <logger name="org.springframework.context.support" level="WARN"/>
+  <logger name="org.hibernate.validator" level="INFO"/>
+  <logger name="net.sf.ehcache" level="INFO"/>
+
+  <root level="debug">
+    <appender-ref ref="dailyRollingFileAppender" />
+  </root>
+
 
 </configuration>
