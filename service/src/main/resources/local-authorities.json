@@ -48,7 +48,7 @@
     "tax":"http://www.east-ayrshire.gov.uk/BusinessAndTrade/BusinessRates/BusinessRates.aspx"
   },
   {
-    "id":"S12000039",
+    "id":"S12000045",
     "name":"East Dunbartonshire",
     "homepage":"http://www.eastdunbarton.gov.uk/home.aspx",
     "tax":"http://www.eastdunbarton.gov.uk/default.aspx?page=14523"
@@ -126,7 +126,7 @@
     "tax":"http://www.north-ayrshire.gov.uk/business/business-rates/business-rates.aspx"
   },
   {
-    "id":"S12000029",
+    "id":"S12000044",
     "name":"North Lanarkshire",
     "homepage":"http://www.northlanarkshire.gov.uk/",
     "tax":"http://www.northlanarkshire.gov.uk/index.aspx?articleid=29202"
