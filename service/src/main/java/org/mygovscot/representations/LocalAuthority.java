@@ -17,6 +17,7 @@ public class LocalAuthority implements Serializable {
     private LocalAuthorityLinks links;
 
     public LocalAuthority() {
+        // Default constructor
     }
 
     public LocalAuthority(String id) {

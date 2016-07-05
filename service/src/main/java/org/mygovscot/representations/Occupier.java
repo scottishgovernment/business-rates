@@ -3,11 +3,13 @@ package org.mygovscot.representations;
 import java.io.Serializable;
 
 public class Occupier implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String name;
 
     public Occupier() {
+        // Default constructor
     }
 
     public Occupier(String name) {

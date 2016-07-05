@@ -19,6 +19,7 @@ public class Postcode implements Serializable {
     private String district;
 
     public Postcode() {
+        // Default constructor.
     }
 
     public Postcode(String postcode) {
