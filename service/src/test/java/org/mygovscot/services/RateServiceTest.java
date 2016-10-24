@@ -1,27 +1,27 @@
 package org.mygovscot.services;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 import org.mygovscot.representations.LocalAuthority;
-import org.mygovscot.representations.Postcode;
 import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @DirtiesContext
 public class RateServiceTest {
@@ -37,87 +37,46 @@ public class RateServiceTest {
 
     @Test
     public void serviceTest() throws IOException {
-        Postcode postcode = new Postcode();
-        postcode.setPostcode("EH6 6QQ");
-
         Property property =  new Property();
         property.setAddress("The address");
-        property.setLocalAuthority(new LocalAuthority());
 
         Property propertyWithoutLA =  new Property();
-        propertyWithoutLA.setAddress("The address without local authority");
+        propertyWithoutLA.setAddress("Another address");
 
-        List<Property> properties = Arrays.asList(property, propertyWithoutLA);
+        List<Property> properties = asList(property, propertyWithoutLA);
 
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setProperties(properties);
 
         RestTemplate geoSearchTemplate = Mockito.mock(RestTemplate.class);
-        Mockito.when(geoSearchTemplate.getForObject("geoUrl", SearchResponse.class, "G1 1PW")).thenReturn(searchResponse);
+        when(geoSearchTemplate.getForObject("geoUrl", SearchResponse.class, "G1 1PW")).thenReturn(searchResponse);
 
         RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
-        Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
-        Mockito.when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
+        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
 
-        ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
-        ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
-        ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
-        ReflectionTestUtils.setField(service, "saaUrl", "saaUrl");
-        ReflectionTestUtils.setField(service, "saaKey", "saaKey");
+        setField(service, "saaTemplate", saaTemplate);
+        setField(service, "saaUrl", "saaUrl");
+        setField(service, "saaKey", "saaKey");
 
         SearchResponse search = service.search("EH66QQ");
-        Assert.assertEquals(1, search.getProperties().size());
+        assertEquals(2, search.getProperties().size());
     }
 
-    @Test( expected = HttpClientErrorException.class)
+    @Test(expected = HttpClientErrorException.class)
     public void service404LATest() {
-        Postcode postcode = new Postcode();
-        postcode.setPostcode("EH6 6QQ");
-
-        // There is a property returned but it does not have an LA so it's rejected by the RateService.
-        Property propertyWithoutLA =  new Property();
-        propertyWithoutLA.setAddress("The address without local authority");
-
-        List<Property> properties = Arrays.asList(propertyWithoutLA);
+        List<Property> properties = emptyList();
 
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setProperties(properties);
 
-        RestTemplate geoSearchTemplate = Mockito.mock(RestTemplate.class);
-        Mockito.when(geoSearchTemplate.getForObject("geoUrl", SearchResponse.class, "G1 1PW")).thenReturn(searchResponse);
-
         RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
-        Mockito.when(saaTemplate.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenReturn(new ResponseEntity<>(postcode, HttpStatus.OK));
-        Mockito.when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
+        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(searchResponse);
 
-        ReflectionTestUtils.setField(service, "geoSearchTemplate", geoSearchTemplate);
-        ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
-        ReflectionTestUtils.setField(service, "saaTemplate", saaTemplate);
-        ReflectionTestUtils.setField(service, "saaUrl", "saaUrl");
-        ReflectionTestUtils.setField(service, "saaKey", "saaKey");
+        setField(service, "saaTemplate", saaTemplate);
+        setField(service, "saaUrl", "saaUrl");
+        setField(service, "saaKey", "saaKey");
 
-        SearchResponse search = service.search("EH66QQ");
-    }
-
-    @Test
-    public void getPostcodeTest() {
-        String postcode = service.getPostcode("ONE\nTWO\nTHREE");
-        Assert.assertEquals("THREE", postcode);
-        postcode = service.getPostcode("ONE");
-        Assert.assertEquals("ONE", postcode);
-    }
-
-    @Test
-    public void getLocalAuthorityTest() {
-
-        RestTemplate template = Mockito.mock(RestTemplate.class);
-        Mockito.when(template.getForEntity("geoUrl", Postcode.class, "G1 1PW")).thenThrow(new HttpClientErrorException(org.springframework.http.HttpStatus.NOT_FOUND, ""));
-
-        ReflectionTestUtils.setField(service, "geoSearchTemplate", template);
-        ReflectionTestUtils.setField(service, "geoUrl", "geoUrl");
-
-        service.getLocalAuthority("G1 1PW");
-
+        service.search("EH66QQ");
     }
 
 }

@@ -3,7 +3,10 @@ package org.mygovscot.representations;
 import java.io.Serializable;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 public class Property implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private String rv;
@@ -54,6 +57,22 @@ public class Property implements Serializable {
 
     public void setUa(int ua) {
         this.ua = ua;
+    }
+
+    public String getValue() {
+        return rv;
+    }
+
+    public String getCouncil() {
+        return localAuthority.getName();
+    }
+
+    public String getLink() {
+        return localAuthority.getLinks().getTax();
+    }
+
+    public List<String> getOccupiers() {
+        return occupier.stream().map(Occupier::getName).collect(toList());
     }
 
 }

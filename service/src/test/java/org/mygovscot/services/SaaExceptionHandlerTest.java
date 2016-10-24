@@ -1,7 +1,8 @@
-package org.mygovscot.services.exceptions;
+package org.mygovscot.services;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mygovscot.services.SaaExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -23,4 +24,5 @@ public class SaaExceptionHandlerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, entity.getStatusCode());
     }
+
 }
