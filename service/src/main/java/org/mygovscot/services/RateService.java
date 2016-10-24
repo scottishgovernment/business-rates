@@ -1,7 +1,8 @@
 package org.mygovscot.services;
 
 import org.mygovscot.representations.LocalAuthority;
-import org.mygovscot.representations.Postcode;
+import org.mygovscot.representations.LocalAuthorityLinks;
+import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,17 +21,16 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.sort;
 
 @RestController
 @RequestMapping("/address")
 public class RateService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RateService.class);
-
-    @Autowired
-    @Qualifier("geoSearchRestTemplate")
-    private RestTemplate geoSearchTemplate;
 
     @Autowired
     @Qualifier("saaRestTemplate")
@@ -41,9 +41,6 @@ public class RateService {
 
     @Value("${saa.key}")
     private String saaKey;
-
-    @Value("${geo_search.url}")
-    private String geoUrl;
 
     private LocalAuthorities authorities;
 
@@ -60,63 +57,34 @@ public class RateService {
         String postcode = urlSafe(search);
         SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, postcode, saaKey);
 
-        // Populate the local authority from our geo-search service
-        searchResponse.getProperties().parallelStream().forEach(property -> {
-            LocalAuthority authority = getLocalAuthority(property.getAddress());
-            if (authority != null) {
+        List<Property> properties = new ArrayList<>();
+        for (Property property : searchResponse.getProperties()) {
+            int authorityId = property.getUa();
+            LA la = authorities.getAuthority(authorityId);
+            if (la != null) {
+                LocalAuthority authority = convert(la);
                 property.setLocalAuthority(authority);
+                properties.add(property);
             }
-        });
-
-        // Filter the list of properties for any that don't have local authorities
-        searchResponse.setProperties(
-                searchResponse.getProperties().parallelStream()
-                        .filter(p -> p.getLocalAuthority() != null)
-                        .sorted((p1, p2) -> p1.getAddress().compareTo(p2.getAddress()))
-                        .collect(Collectors.toList()));
+        }
 
         // Since the client is expecting a 404 when no properties are found, we now need to check for an empty list.
         if (searchResponse.getProperties().isEmpty()) {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "No properties found.");
         }
 
+        sort(properties, (p1, p2) -> p1.getAddress().compareTo(p2.getAddress()));
         return searchResponse;
     }
 
-    public LocalAuthority getLocalAuthority(String address) {
-        String postcode = getPostcode(address);
-        String authorityId = getLocalAuthorityId(postcode);
-        return authorities.getAuthority(authorityId);
-    }
-
-    public String getLocalAuthorityId(String postcode) {
-        try {
-            Postcode code = geoSearchTemplate.getForObject(geoUrl, Postcode.class, postcode);
-            String authorityId = code != null ? code.getDistrict() : "";
-            LOG.debug("For postcode {} found LA: {}", postcode, authorityId);
-            return authorityId;
-        } catch (HttpClientErrorException e) {
-            LOG.error("Unable to retrieve local authority details for address {} [{}]", postcode, e.getLocalizedMessage());
-            LOG.debug("Geo Search Error", e);
-            return null;
-        }
-    }
-
-    String getPostcode(String address) {
-        LOG.debug("Parsing address for postcode {}", address);
-
-        String postcode = null;
-        if (address.contains("\n")) {
-            String[] addressParts = address.split("\\n");
-            postcode = addressParts[addressParts.length - 1];
-        } else {
-            postcode = address;
-        }
-        postcode = postcode.replace(" ", "").toUpperCase();
-
-        LOG.debug("Postcode ----{}----", postcode);
-
-        return postcode;
+    private static LocalAuthority convert(LA la) {
+        LocalAuthority authority = new LocalAuthority();
+        authority.setId(String.valueOf(la.getId()));
+        authority.setName(la.getName());
+        LocalAuthorityLinks links = new LocalAuthorityLinks();
+        authority.setLinks(links);
+        links.setTax(la.getLink());
+        return authority;
     }
 
     /**

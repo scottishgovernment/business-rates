@@ -1,4 +1,4 @@
-package org.mygovscot.services.exceptions;
+package org.mygovscot.services;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class SaaExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({HttpClientErrorException.class})
+    @ExceptionHandler(HttpClientErrorException.class)
     protected ResponseEntity<Object> handleAddressNotFound(RuntimeException e, WebRequest request) {
         HttpClientErrorException ire = (HttpClientErrorException) e;
 

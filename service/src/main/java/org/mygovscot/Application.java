@@ -17,10 +17,6 @@ import org.springframework.http.HttpStatus;
 @EnableAutoConfiguration
 public class Application {
 
-    public String getConfiguration() {
-        return "business-rates-rest-service";
-    }
-
     public static void main(String[] args) {
         SpringApplication application = new SpringApplicationBuilder(Application.class).showBanner(false).application();
         application.addInitializers(new BetaConfigInitializer());

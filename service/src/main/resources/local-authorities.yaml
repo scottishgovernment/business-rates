@@ -1,0 +1,96 @@
+- id: 100
+  name: Aberdeen City
+  link: http://www.aberdeencity.gov.uk/business_trade/business_rates/bur_BusRates.asp
+- id: 110
+  name: Aberdeenshire
+  link: http://www.aberdeenshire.gov.uk/rates/
+- id: 120
+  name: Angus
+  link: http://www.angus.gov.uk/info/20132/business_rates
+- id: 130
+  name: Argyll and Bute
+  link: http://www.argyll-bute.gov.uk/business-and-trade/business-rates
+- id: 150
+  name: Clackmannanshire
+  link: http://www.clacksweb.org.uk/council/payit/
+- id: 170
+  name: Dumfries and Galloway
+  link: http://www.dumgal.gov.uk/index.aspx?articleid=1120
+- id: 180
+  name: Dundee City
+  link: http://www.dundeecity.gov.uk/finance/nondomesticrates/
+- id: 190
+  name: East Ayrshire
+  link: http://www.east-ayrshire.gov.uk/BusinessAndTrade/BusinessRates/BusinessRates.aspx
+- id: 200
+  name: East Dunbartonshire
+  link: http://www.eastdunbarton.gov.uk/default.aspx?page=14523
+- id: 210
+  name: East Lothian
+  link: http://www.eastlothian.gov.uk/info/2/business_rates/539/business_rates/5
+- id: 220
+  name: East Renfrewshire
+  link: http://www.eastrenfrewshire.gov.uk/business_rates
+- id: 230
+  name: City of Edinburgh
+  link: http://www.edinburgh.gov.uk/info/20020/business_rates/757/non-domestic_business_rates_charges
+- id: 235
+  name: Comhairle nan Eilean Siar (Outer Hebrides)
+  link: http://www.cne-siar.gov.uk/rates/
+- id: 240
+  name: Falkirk
+  link: https://www.falkirk.gov.uk/services/business-investment/business-rates/
+- id: 250
+  name: Fife
+  link: http://www.fife.gov.uk/topics/index.cfm?fuseaction=subject.display&subjectid=350F6121-ADF3-2158-7D94B34548B73EED
+- id: 260
+  name: Glasgow City
+  link: https://glasgow.gov.uk/index.aspx?articleid=17154
+- id: 270
+  name: Highland
+  link: http://www.highland.gov.uk/info/2/business_rates/404/non-domestic_rates
+- id: 280
+  name: Inverclyde
+  link: http://www.inverclyde.gov.uk/council-and-government/non-domestic-rates
+- id: 290
+  name: Midlothian
+  link: http://www.midlothian.gov.uk/info/2/business_rates
+- id: 300
+  name: Moray
+  link: http://www.moray.gov.uk/moray_standard/page_2272.html
+- id: 310
+  name: North Ayrshire
+  link: http://www.north-ayrshire.gov.uk/business/business-rates/business-rates.aspx
+- id: 320
+  name: North Lanarkshire
+  link: http://www.northlanarkshire.gov.uk/article/29202/Non-Domestic-Rates
+- id: 330
+  name: Orkney Islands
+  link: http://www.orkney.gov.uk/Service-Directory/B/Business-Rates.htm
+- id: 340
+  name: Perth and Kinross
+  link: http://www.pkc.gov.uk/article/1627/Business-rates
+- id: 350
+  name: Renfrewshire
+  link: http://www.renfrewshire.gov.uk/article/2111/Business-rates
+- id: 355
+  name: Scottish Borders
+  link: http://www.scotborders.gov.uk/info/2/business_rates
+- id: 360
+  name: Shetland Islands
+  link: http://www.shetland.gov.uk/about_business_rates/
+- id: 370
+  name: South Ayrshire
+  link: http://www.south-ayrshire.gov.uk/businessrates/
+- id: 380
+  name: South Lanarkshire
+  link: http://www.southlanarkshire.gov.uk/info/200157/business_rates
+- id: 390
+  name: Stirling
+  link: http://my.stirling.gov.uk/services/business-and-trade/business-rates
+- id: 395
+  name: West Dunbartonshire
+  link: https://www.west-dunbarton.gov.uk/business/business-rates/business-rates/
+- id: 400
+  name: West Lothian
+  link: http://www.westlothian.gov.uk/business-rates

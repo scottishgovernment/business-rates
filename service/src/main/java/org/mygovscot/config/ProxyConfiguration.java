@@ -33,20 +33,9 @@ public class ProxyConfiguration {
     @Value("${saa.password}")
     private String password = null;
 
-    @Value("${geo_search.proxyHost}")
-    private String geoSearchProxyHost = null;
-
-    @Value("${geo_search.proxyPort}")
-    private int geoSearchProxyPort = 80;
-
     @Bean(name = "saaRestTemplate")
     RestTemplate saaRestTemplate() {
         return getRestTemplate(saaProxyHost, saaProxyPort);
-    }
-
-    @Bean(name = "geoSearchRestTemplate")
-    RestTemplate postcodeRestTemplate() {
-        return getRestTemplate(geoSearchProxyHost, geoSearchProxyPort);
     }
 
     private RestTemplate getRestTemplate(String proxyHost, int proxyPort) {

@@ -1,19 +1,21 @@
 package org.mygovscot.services;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.io.IOUtils;
-import org.mygovscot.representations.LocalAuthority;
-import org.mygovscot.representations.LocalAuthorityLinks;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BinaryOperator;
+
+import static java.util.Arrays.stream;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Provides access to web links for local authorities.
@@ -22,40 +24,36 @@ import java.util.Map;
 @Repository
 public class LocalAuthorities {
 
-    public static final String AUTHORITIES_JSON = "/local-authorities.json";
+    public static final String AUTHORITIES_YAML = "/local-authorities.yaml";
 
-    private final Map<String, LocalAuthority> authorities = new HashMap<>();
+    final Map<Integer, LA> authorities = new LinkedHashMap<>();
 
-    public LocalAuthority getAuthority(String id) {
+    public LA getAuthority(int id) {
         return authorities.get(id);
     }
 
     @PostConstruct
     public void load() throws IOException {
-        InputStream is = getClass().getResourceAsStream(AUTHORITIES_JSON);
+        InputStream is = getClass().getResourceAsStream(AUTHORITIES_YAML);
+        LA[] las;
         try {
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             JsonParser parser = mapper.getFactory().createParser(is);
-            ArrayNode array = parser.readValueAsTree();
-            for (JsonNode node : array) {
-                LocalAuthority authority = convert(node);
-                authorities.put(authority.getId(), authority);
-            }
+            las = parser.readValueAs(LA[].class);
         } catch (IOException ex) {
             IOUtils.closeQuietly(is);
             throw ex;
         }
+        Map<Integer, LA> map = stream(las).collect(toMap(
+                LA::getId,
+                identity(),
+                throwingMerger(),
+                LinkedHashMap::new));
+        authorities.putAll(map);
     }
 
-    private static LocalAuthority convert(JsonNode node) {
-        LocalAuthority authority = new LocalAuthority();
-        authority.setId(node.get("id").asText());
-        authority.setName(node.get("name").asText());
-        LocalAuthorityLinks links = new LocalAuthorityLinks();
-        authority.setLinks(links);
-        links.setHomepage(node.get("homepage").asText(null));
-        links.setTax(node.get("tax").asText(null));
-        return authority;
+    private static <T> BinaryOperator<T> throwingMerger() {
+        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
     }
 
 }

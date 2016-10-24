@@ -20,6 +20,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -35,13 +38,12 @@ public class ApplicationTests {
 
     @Test
     public void search() {
-
         // Retrieve the content item from the REST endpoint
         ResponseEntity<SearchResponse> singleResponse = restTemplate.getForEntity(context, SearchResponse.class, "EH66QQ");
         SearchResponse body = singleResponse.getBody();
 
-        Assert.assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
-        Assert.assertTrue(body.getProperties().size() > 0);
+        assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
+        assertTrue(body.getProperties().size() > 0);
 
     }
 
@@ -65,7 +67,7 @@ public class ApplicationTests {
         ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "EH1");
         String body = singleResponse.getBody();
 
-        Assert.assertEquals(HttpStatus.FORBIDDEN, singleResponse.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, singleResponse.getStatusCode());
     }
 
     @Test(expected = HttpClientErrorException.class)
@@ -73,7 +75,7 @@ public class ApplicationTests {
         ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "THISADDRESSDOESNOTEXIST");
         String body = singleResponse.getBody();
 
-        Assert.assertEquals(HttpStatus.NOT_FOUND, singleResponse.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, singleResponse.getStatusCode());
     }
 
     @Test
@@ -81,6 +83,6 @@ public class ApplicationTests {
         ResponseEntity<String> singleResponse = restTemplate.getForEntity(context, String.class, "high street glasgow");
         String body = singleResponse.getBody();
 
-        Assert.assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
+        assertEquals(HttpStatus.OK, singleResponse.getStatusCode());
     }
 }
