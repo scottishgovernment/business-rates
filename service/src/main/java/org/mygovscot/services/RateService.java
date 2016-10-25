@@ -57,6 +57,11 @@ public class RateService {
         String postcode = urlSafe(search);
         SearchResponse searchResponse = saaTemplate.getForObject(saaUrl, SearchResponse.class, postcode, saaKey);
 
+        // Since the client is expecting a 404 when no properties are found, we now need to check for an empty list.
+        if (searchResponse.getProperties() == null || searchResponse.getProperties().isEmpty()) {
+            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "No properties found.");
+        }
+
         List<Property> properties = new ArrayList<>();
         for (Property property : searchResponse.getProperties()) {
             int authorityId = property.getUa();
@@ -66,11 +71,6 @@ public class RateService {
                 property.setLocalAuthority(authority);
                 properties.add(property);
             }
-        }
-
-        // Since the client is expecting a 404 when no properties are found, we now need to check for an empty list.
-        if (searchResponse.getProperties().isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "No properties found.");
         }
 
         sort(properties, (p1, p2) -> p1.getAddress().compareTo(p2.getAddress()));

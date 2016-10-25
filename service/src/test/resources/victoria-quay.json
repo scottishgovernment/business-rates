@@ -1,0 +1,23 @@
+{
+  "message":"Found",
+  "properties":[
+    {
+      "uarn":"112V509(A)",
+      "ua":"230",
+      "rv":"3900000",
+      "address":"(A)\nVICTORIA QUAY\nEDINBURGH\nEH6 6QQ",
+      "occupier":[
+        "SCOTTISH GOVERNMENT\nPROPERTY DIVISION\nAREA 3G - NORTH\nVICTORIA QUAY\nEDINBURGH\nEH6 6QQ"
+      ]
+    },
+    {
+      "uarn":"112V509(A1)",
+      "ua":"230",
+      "rv":"5950",
+      "address":"(A1)\nVICTORIA QUAY\nEDINBURGH\nEH6 6QQ",
+      "occupier":[
+        "BANK OF SCOTLAND PER HBOS GROUP PROPERTY (RATING)\nHBOS PLC\nTRINITY ROAD\nHALIFAX\nWEST YORKSHIRE\nHX1 2RG"
+      ]
+    }
+  ]
+}
