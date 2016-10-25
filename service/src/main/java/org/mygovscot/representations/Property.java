@@ -1,13 +1,10 @@
 package org.mygovscot.representations;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class Property implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Property {
 
     private String rv;
 

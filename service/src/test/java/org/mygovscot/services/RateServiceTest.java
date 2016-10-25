@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mygovscot.representations.LocalAuthority;
+import org.mygovscot.representations.Occupier;
 import org.mygovscot.representations.Property;
 import org.mygovscot.representations.SearchResponse;
 import org.springframework.test.annotation.DirtiesContext;
@@ -11,12 +12,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -39,11 +42,14 @@ public class RateServiceTest {
     public void serviceTest() throws IOException {
         Property property =  new Property();
         property.setAddress("The address");
+        List<Occupier> occupiers = new ArrayList<>();
+        Occupier occupier = new Occupier();
+        occupier.setName("Occupier");
+        occupiers.add(occupier);
+        property.setOccupier(occupiers);
+        property.setUa(260);
 
-        Property propertyWithoutLA =  new Property();
-        propertyWithoutLA.setAddress("Another address");
-
-        List<Property> properties = asList(property, propertyWithoutLA);
+        List<Property> properties = singletonList(property);
 
         SearchResponse searchResponse = new SearchResponse();
         searchResponse.setProperties(properties);
@@ -59,7 +65,8 @@ public class RateServiceTest {
         setField(service, "saaKey", "saaKey");
 
         SearchResponse search = service.search("EH66QQ");
-        assertEquals(2, search.getProperties().size());
+        assertEquals(1, search.getProperties().size());
+        assertEquals("Glasgow City", search.getProperties().get(0).getCouncil());
     }
 
     @Test(expected = HttpClientErrorException.class)

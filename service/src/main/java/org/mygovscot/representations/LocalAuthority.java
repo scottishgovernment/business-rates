@@ -1,12 +1,9 @@
 package org.mygovscot.representations;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LocalAuthority implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class LocalAuthority {
 
     private String id;
 
@@ -55,4 +52,5 @@ public class LocalAuthority implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
 }
