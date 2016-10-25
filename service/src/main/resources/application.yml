@@ -1,5 +1,5 @@
 application:
-   name: business_rate_rest_service
+   name: business_rates
 
 saa:
   url: https://staging.govusers.saa.gov.uk/shared/webservices/vr.php?search_term={search}&key={key}
