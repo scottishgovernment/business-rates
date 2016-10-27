@@ -1,0 +1,5 @@
+#!/bin/sh
+cat business-rates.csv | \
+ruby -e "require 'csv'; require 'json'; print CSV.parse(STDIN).to_json" |
+jq 'map({"id": .[0] | tonumber, "name": .[1], "link": .[2]})' |
+ruby -e "require 'yaml'; require 'json'; print YAML.dump(JSON.load(STDIN))"

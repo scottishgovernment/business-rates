@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ruby -e "require 'yaml'; require 'json'; print JSON.pretty_generate(YAML.load(File.new('src/main/resources/local-authorities.yaml')))" |
+jq -r "map(to_entries | map(.value))[] | @csv" > business-rates.csv
