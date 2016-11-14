@@ -3,7 +3,7 @@
   link: http://www.aberdeencity.gov.uk/business_trade/business_rates/bur_BusRates.asp
 - id: 110
   name: Aberdeenshire
-  link: http://www.aberdeenshire.gov.uk/rates/
+  link: http://www.aberdeenshire.gov.uk/business/business-rates/
 - id: 120
   name: Angus
   link: http://www.angus.gov.uk/info/20132/business_rates
@@ -15,7 +15,7 @@
   link: http://www.clacksweb.org.uk/council/payit/
 - id: 170
   name: Dumfries and Galloway
-  link: http://www.dumgal.gov.uk/index.aspx?articleid=1120
+  link: http://www.dumgal.gov.uk/article/15179/Business-rates
 - id: 180
   name: Dundee City
   link: http://www.dundeecity.gov.uk/finance/nondomesticrates/
