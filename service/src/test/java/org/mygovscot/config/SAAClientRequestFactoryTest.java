@@ -25,19 +25,6 @@ public class SAAClientRequestFactoryTest {
     private static final String STAGE_URL =
             "https://staging.govusers.saa.gov.uk/shared/webservices/vr.php?search_term=";
 
-    @Test
-    public void connectionShouldAllowSelfSignedCertificateForStagingServer() throws IOException {
-        factory = new SAAClientHttpRequestFactory(null, null);
-        HttpsURLConnection connection = mock(HttpsURLConnection.class);
-        when(connection.getURL()).thenReturn(URI.create(STAGE_URL).toURL());
-        ArgumentCaptor<SSLSocketFactory> captor = ArgumentCaptor.forClass(SSLSocketFactory.class);
-
-        factory.prepareConnection(connection, "GET");
-
-        verify(connection).setSSLSocketFactory(captor.capture());
-        assertEquals(factory.sslSocketFactory, captor.getValue());
-    }
-
 
     @Test
     public void defaultSSLSocketFactoryShouldBeUsedForLiveServer() throws IOException {

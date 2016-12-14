@@ -47,6 +47,22 @@ public class RateServiceTest {
         assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
     }
 
+    @Test
+    public void serviceTestWithExtraValues() throws IOException {
+        SearchResponse saaResponse = loadResponse("/victoria-quay-extra-properties.json");
+
+        RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
+        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(saaResponse);
+
+        setField(service, "saaTemplate", saaTemplate);
+        setField(service, "saaUrl", "saaUrl");
+        setField(service, "saaKey", "saaKey");
+
+        SearchResponse search = service.search("EH66QQ");
+        assertEquals(2, search.getProperties().size());
+        assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
+    }
+
     @Test(expected = HttpClientErrorException.class)
     public void service404LATest() throws IOException {
         SearchResponse saaResponse = loadResponse("/unknown.json");
