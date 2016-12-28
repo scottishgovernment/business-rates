@@ -1,2 +1,8 @@
 #!/bin/sh
-service business-rates stop || true
+if [ -x /bin/systemctl ]
+then
+    systemctl stop business-rates  || true
+    systemctl disable business-rates  || true
+else
+    service business-rates stop || true
+fi
