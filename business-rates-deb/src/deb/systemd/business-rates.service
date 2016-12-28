@@ -1,0 +1,12 @@
+[Unit]
+Description=business rates service
+After=network.target
+
+[Service]
+User=business-rates
+WorkingDirectory=/opt/business-rates
+ExecStart=/opt/business-rates/run.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -58,6 +58,14 @@
                             </mapper>
                         </data>
                         <data>
+                            <src>${basedir}/src/deb/systemd/business-rates.service</src>
+                            <type>file</type>
+                            <mapper>
+                                <type>perm</type>
+                                <prefix>/lib/systemd/system</prefix>
+                            </mapper>
+                        </data>
+                        <data>
                             <src>${project.build.directory}/dependency/business-rates-service-${project.version}.jar</src>                        
                             <type>file</type>
                             <mapper>
