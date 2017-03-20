@@ -2,7 +2,7 @@
 <configuration>
 
   <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <File>/var/log/${deployedName}/${deployedName}.log</File>
+      <File>/var/log/business-rates/business-rates.log</File>
       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <FileNamePattern>/var/log/business-rates/business-rates.%d{yyyy-MM-dd}.log</FileNamePattern>
       <maxHistory>30</maxHistory>
