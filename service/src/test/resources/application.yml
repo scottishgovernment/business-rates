@@ -2,7 +2,7 @@ application:
   name: business_rate_rest_service
 
 saa:
-  url: http://staging.saa.gov.uk/shared/webservices/vr.php?search_term={search}
+  url: https://www.saa.gov.uk/shared/webservices/vr.php?search_term={search}
   key:
   username:
   password:
