@@ -1,4 +1,4 @@
-package scot.mygov.business.rates.services;
+package scot.mygov.business.rates.resources;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +9,8 @@ import scot.mygov.business.rates.representations.SearchResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import scot.mygov.business.rates.services.LocalAuthorities;
+import scot.mygov.business.rates.services.RateService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,15 +22,18 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @DirtiesContext
-public class RateServiceTest {
+public class RateResourceTest {
 
     private RateService service;
+
+    private RateResource resource;
 
     @Before
     public void setUp() throws IOException {
         LocalAuthorities authorities = new LocalAuthorities();
         authorities.load();
         service = new RateService(authorities);
+        resource = new RateResource(service);
     }
 
     @Test
@@ -42,7 +47,7 @@ public class RateServiceTest {
         setField(service, "saaUrl", "saaUrl");
         setField(service, "saaKey", "saaKey");
 
-        SearchResponse search = service.search("EH66QQ");
+        SearchResponse search = resource.search("EH66QQ");
         assertEquals(2, search.getProperties().size());
         assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
     }
@@ -58,7 +63,7 @@ public class RateServiceTest {
         setField(service, "saaUrl", "saaUrl");
         setField(service, "saaKey", "saaKey");
 
-        SearchResponse search = service.search("EH66QQ");
+        SearchResponse search = resource.search("EH66QQ");
         assertEquals(2, search.getProperties().size());
         assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
     }
@@ -74,7 +79,7 @@ public class RateServiceTest {
         setField(service, "saaUrl", "saaUrl");
         setField(service, "saaKey", "saaKey");
 
-        service.search("EH66QQ");
+        resource.search("EH66QQ");
     }
 
     private SearchResponse loadResponse(String file) throws IOException {
