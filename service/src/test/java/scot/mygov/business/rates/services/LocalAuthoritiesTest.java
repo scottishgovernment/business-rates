@@ -1,4 +1,4 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.services;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

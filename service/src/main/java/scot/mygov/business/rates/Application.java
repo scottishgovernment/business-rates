@@ -1,4 +1,4 @@
-package org.mygovscot;
+package scot.mygov.business.rates;
 
 import org.mygovscot.beta.config.BetaConfigInitializer;
 import org.mygovscot.beta.config.Dump;

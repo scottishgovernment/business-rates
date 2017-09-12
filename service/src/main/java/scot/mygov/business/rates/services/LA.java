@@ -1,4 +1,4 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.services;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

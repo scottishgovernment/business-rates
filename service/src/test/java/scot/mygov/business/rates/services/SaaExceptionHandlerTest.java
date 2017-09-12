@@ -1,8 +1,7 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.services;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mygovscot.services.SaaExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;

@@ -1,4 +1,4 @@
-package org.mygovscot.config;
+package scot.mygov.business.rates.config;
 
 import java.net.Proxy;
 

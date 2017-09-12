@@ -1,11 +1,11 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.services;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mygovscot.representations.SearchResponse;
+import scot.mygov.business.rates.representations.SearchResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;

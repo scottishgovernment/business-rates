@@ -1,12 +1,9 @@
-package org.mygovscot.config;
+package scot.mygov.business.rates.config;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.*;

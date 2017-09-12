@@ -1,4 +1,4 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.services;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

@@ -1,9 +1,9 @@
-package org.mygovscot.services;
+package scot.mygov.business.rates.resources;
 
-import org.mygovscot.representations.LocalAuthority;
-import org.mygovscot.representations.LocalAuthorityLinks;
-import org.mygovscot.representations.Property;
-import org.mygovscot.representations.SearchResponse;
+import scot.mygov.business.rates.representations.LocalAuthority;
+import scot.mygov.business.rates.representations.LocalAuthorityLinks;
+import scot.mygov.business.rates.representations.Property;
+import scot.mygov.business.rates.representations.SearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import scot.mygov.business.rates.services.LA;
+import scot.mygov.business.rates.services.LocalAuthorities;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

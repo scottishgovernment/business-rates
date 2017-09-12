@@ -1,4 +1,4 @@
-package org.mygovscot.representations;
+package scot.mygov.business.rates.representations;
 
 import java.io.Serializable;
 
