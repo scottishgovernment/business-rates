@@ -9,5 +9,8 @@ saa:
   proxyHost:
   proxyPort: 80
 
+health:
+  search: EH66QQ
+
 server:
   port: 9093

@@ -27,7 +27,7 @@ public class HealthcheckTest {
     @Before
     public void setUp() throws IOException {
         rateService = mock(RateService.class);
-        healthcheck = new Healthcheck(rateService);
+        healthcheck = new Healthcheck(rateService, "EH66QQ");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class HealthcheckTest {
     @Test
     public void returns503WhenUnavailable() throws IOException {
         SearchResponse saaResponse = loadResponse("/victoria-quay.json");
-        when(rateService.search(anyString())).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        when(rateService.search("EH66QQ")).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         ResponseEntity<String> health = healthcheck.health();
 
