@@ -13,8 +13,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import scot.mygov.business.rates.representations.SearchResponse;
 import scot.mygov.business.rates.services.RateService;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/health")
 public class Healthcheck {
