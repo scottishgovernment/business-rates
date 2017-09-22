@@ -2,15 +2,13 @@ application:
    name: business_rates
 
 saa:
-  url: https://staging.saa.gov.uk/shared/webservices/vr.php?search_term={search}&key={key}
+  url: https://www.saa.gov.uk/shared/webservices/vr.php?search_term={search}&key={key}
   key:
   username:
   password:
-  proxyHost:
-  proxyPort: 80
 
 health:
   search: EH66QQ
+  cache_time: PT1M
 
-server:
-  port: 9093
+port: 9093

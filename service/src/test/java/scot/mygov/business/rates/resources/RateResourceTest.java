@@ -4,27 +4,25 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import scot.mygov.business.rates.client.ResultType;
+import scot.mygov.business.rates.client.SAAClient;
+import scot.mygov.business.rates.client.SAAResponse;
+import scot.mygov.business.rates.client.SAAResult;
+import scot.mygov.business.rates.representations.Property;
 import scot.mygov.business.rates.representations.SearchResponse;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import scot.mygov.business.rates.services.LocalAuthorities;
-import scot.mygov.business.rates.services.RateService;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-@DirtiesContext
 public class RateResourceTest {
 
-    private RateService service;
+    private SAAClient service;
 
     private RateResource resource;
 
@@ -32,64 +30,57 @@ public class RateResourceTest {
     public void setUp() throws IOException {
         LocalAuthorities authorities = new LocalAuthorities();
         authorities.load();
-        service = new RateService(authorities);
-        resource = new RateResource(service);
+        service = mock(SAAClient.class);
+        resource = new RateResource(service, authorities);
     }
 
     @Test
     public void serviceTest() throws IOException {
-        SearchResponse saaResponse = loadResponse("/victoria-quay.json");
+        SAAResponse saaResponse = loadResponse(ResultType.OK, "/victoria-quay.json");
+        when(service.search("EH66QQ")).thenReturn(saaResponse);
 
-        RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
-        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(saaResponse);
+        Response response = resource.search("EH66QQ");
 
-        setField(service, "saaTemplate", saaTemplate);
-        setField(service, "saaUrl", "saaUrl");
-        setField(service, "saaKey", "saaKey");
-
-        SearchResponse search = resource.search("EH66QQ");
-        assertEquals(2, search.getProperties().size());
-        assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
+        assertThat(response.getStatus()).isEqualTo(200);
+        SearchResponse search = (SearchResponse) response.getEntity();
+        assertThat(search.getProperties()).hasSize(2);
+        Property property = search.getProperties().get(0);
+        assertThat(property.getOccupiers().get(0)).startsWith("SCOTTISH GOVERNMENT");
+        assertThat(property.getCouncil()).isEqualTo("City of Edinburgh");
     }
 
     @Test
     public void serviceTestWithExtraValues() throws IOException {
-        SearchResponse saaResponse = loadResponse("/victoria-quay-extra-properties.json");
+        SAAResponse saaResponse = loadResponse(ResultType.OK, "/victoria-quay-extra-properties.json");
+        when(service.search("EH66QQ")).thenReturn(saaResponse);
 
-        RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
-        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(saaResponse);
+        Response response = resource.search("EH66QQ");
 
-        setField(service, "saaTemplate", saaTemplate);
-        setField(service, "saaUrl", "saaUrl");
-        setField(service, "saaKey", "saaKey");
-
-        SearchResponse search = resource.search("EH66QQ");
+        SearchResponse search = (SearchResponse) response.getEntity();
         assertEquals(2, search.getProperties().size());
-        assertEquals("City of Edinburgh", search.getProperties().get(0).getCouncil());
+        assertThat(search.getProperties().get(0).getOccupiers().get(0)).startsWith("SCOTTISH GOVERNMENT");
     }
 
-    @Test(expected = HttpClientErrorException.class)
+    @Test
     public void service404LATest() throws IOException {
-        SearchResponse saaResponse = loadResponse("/unknown.json");
+        SAAResponse saaResponse = loadResponse(ResultType.NO_RESULTS, "/unknown.json");
+        when(service.search("EH66QQ")).thenReturn(saaResponse);
 
-        RestTemplate saaTemplate = Mockito.mock(RestTemplate.class);
-        when(saaTemplate.getForObject(anyString(), eq(SearchResponse.class), eq("EH66QQ"), eq("saaKey"))).thenReturn(saaResponse);
+        Response response = resource.search("EH66QQ");
 
-        setField(service, "saaTemplate", saaTemplate);
-        setField(service, "saaUrl", "saaUrl");
-        setField(service, "saaKey", "saaKey");
-
-        resource.search("EH66QQ");
+        assertThat(response.getStatus()).isEqualTo(404);
+        SearchResponse search = (SearchResponse) response.getEntity();
+        assertThat(search.getProperties()).isNullOrEmpty();
     }
 
-    private SearchResponse loadResponse(String file) throws IOException {
+    private SAAResponse loadResponse(ResultType type, String file) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        SearchResponse saaResponse;
+        SAAResult result;
         try (InputStream is = getClass().getResourceAsStream(file)) {
-            saaResponse = mapper.readValue(is, SearchResponse.class);
+            result = mapper.readValue(is, SAAResult.class);
         }
-        return saaResponse;
+        return new SAAResponse(type, result);
     }
 
 }

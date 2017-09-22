@@ -1,10 +1,6 @@
-package scot.mygov.business.rates.representations;
+package scot.mygov.business.rates.client;
 
-import java.io.Serializable;
-
-public class Occupier implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Occupier {
 
     private String name;
 
@@ -23,4 +19,5 @@ public class Occupier implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -2,46 +2,64 @@ package scot.mygov.business.rates.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
+import scot.mygov.business.rates.client.ResultType;
+import scot.mygov.business.rates.client.SAAClient;
+import scot.mygov.business.rates.client.SAAProperty;
+import scot.mygov.business.rates.client.SAAResponse;
+import scot.mygov.business.rates.client.SAAResult;
+import scot.mygov.business.rates.representations.LocalAuthority;
+import scot.mygov.business.rates.representations.LocalAuthorityLinks;
+import scot.mygov.business.rates.representations.Property;
 import scot.mygov.business.rates.representations.SearchResponse;
-import scot.mygov.business.rates.services.RateService;
 
-import java.io.IOException;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
-@RestController
-@RequestMapping("/address")
+import static java.util.Collections.sort;
+
+@Path("address")
 public class RateResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(RateResource.class);
 
-    private final RateService rates;
+    private final SAAClient rates;
 
-    @Autowired
-    public RateResource(RateService rates) throws IOException {
+    private final LocalAuthorities authorities;
+
+    @Inject
+    public RateResource(
+            @Named("service") SAAClient rates,
+            LocalAuthorities authorities)  {
         this.rates = rates;
+        this.authorities = authorities;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @Cacheable("saa.search")
-    public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
+    @GET
+    public Response search(@QueryParam("search") String search) {
         String postcode = urlSafe(search);
+        SAAResponse searchResponse = rates.search(postcode);
 
-        SearchResponse searchResponse = rates.search(postcode);
-        // Since the client is expecting a 404 when no properties are found, we now need to check for an empty list.
-        if (searchResponse.getProperties() == null || searchResponse.getProperties().isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "No properties found.");
+        ResultType type = searchResponse.getType();
+        SAAResult properties = searchResponse.getResult();
+
+        SearchResponse response = new SearchResponse();
+        response.setResultType(type);
+        response.setMessage(properties.getMessage());
+        if (properties.getProperties() != null) {
+            response.setProperties(convert(properties.getProperties()));
         }
-
-        return rates.search(postcode);
+        return Response.status(type.getStatusCode())
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(response)
+                .build();
     }
 
     /**
@@ -54,12 +72,42 @@ public class RateResource {
      * @throws UnsupportedEncodingException
      */
     protected String urlSafe(String search) {
-        if (StringUtils.isEmpty(search)) {
+        if (search == null) {
             return "";
-        } else {
-            String cleaned = search.replace("\\n", " ");
-            LOG.debug("Searching using " + cleaned);
-            return cleaned;
         }
+        String cleaned = search.replace("\\n", " ");
+        LOG.debug("Searching using " + cleaned);
+        return cleaned;
     }
+
+
+    private List<Property> convert(List<SAAProperty> properties) {
+        List<Property> result = new ArrayList<>(properties.size());
+        for (SAAProperty saaProperty : properties) {
+            Property property = new Property();
+            property.setRv(saaProperty.getRv());
+            property.setAddress(saaProperty.getAddress());
+            property.setOccupier(saaProperty.getOccupier());
+
+            int authorityId = saaProperty.getUa();
+            property.setUa(authorityId);
+            LA la = authorities.getAuthority(authorityId);
+            LocalAuthority authority = convert(la);
+            property.setLocalAuthority(authority);
+            result.add(property);
+        }
+        sort(result, (p1, p2) -> p1.getAddress().compareTo(p2.getAddress()));
+        return result;
+    }
+
+    private LocalAuthority convert(LA la) {
+        LocalAuthority authority = new LocalAuthority();
+        authority.setId(String.valueOf(la.getId()));
+        authority.setName(la.getName());
+        LocalAuthorityLinks links = new LocalAuthorityLinks();
+        authority.setLinks(links);
+        links.setTax(la.getLink());
+        return authority;
+    }
+
 }
