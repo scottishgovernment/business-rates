@@ -1,10 +1,13 @@
 package scot.mygov.business.rates.representations;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Property implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.io.IOUtils;
-import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -21,7 +20,6 @@ import static java.util.stream.Collectors.toMap;
  * Provides access to web links for local authorities.
  * Links provided include the home page and the business rates page, if applicable.
  */
-@Repository
 public class LocalAuthorities {
 
     public static final String AUTHORITIES_YAML = "/local-authorities.yaml";

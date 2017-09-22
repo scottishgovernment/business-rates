@@ -2,46 +2,39 @@ package scot.mygov.business.rates.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import scot.mygov.business.rates.representations.SearchResponse;
 import scot.mygov.business.rates.services.RateService;
 
-import java.io.IOException;
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 
-@RestController
-@RequestMapping("/address")
+@Path("address")
 public class RateResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(RateResource.class);
 
     private final RateService rates;
 
-    @Autowired
-    public RateResource(RateService rates) throws IOException {
+    @Inject
+    public RateResource(RateService rates)  {
         this.rates = rates;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @Cacheable("saa.search")
-    public SearchResponse search(@RequestParam(value = "search", required = true) String search) {
+    @GET
+    public Response search(@QueryParam("search") String search) {
         String postcode = urlSafe(search);
 
         SearchResponse searchResponse = rates.search(postcode);
-        // Since the client is expecting a 404 when no properties are found, we now need to check for an empty list.
-        if (searchResponse.getProperties() == null || searchResponse.getProperties().isEmpty()) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "No properties found.");
-        }
-
-        return rates.search(postcode);
+        int statusCode = searchResponse.getResultType().getStatusCode();
+        return Response.status(statusCode)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .entity(searchResponse)
+                .build();
     }
 
     /**
@@ -54,12 +47,12 @@ public class RateResource {
      * @throws UnsupportedEncodingException
      */
     protected String urlSafe(String search) {
-        if (StringUtils.isEmpty(search)) {
+        if (search == null) {
             return "";
-        } else {
-            String cleaned = search.replace("\\n", " ");
-            LOG.debug("Searching using " + cleaned);
-            return cleaned;
         }
+        String cleaned = search.replace("\\n", " ");
+        LOG.debug("Searching using " + cleaned);
+        return cleaned;
     }
+
 }

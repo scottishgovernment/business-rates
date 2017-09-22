@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+import scot.mygov.business.rates.BusinessRatesConfiguration;
 import scot.mygov.business.rates.representations.SearchResponse;
 import scot.mygov.business.rates.services.RateService;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Clock;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,10 +24,14 @@ public class HealthcheckTest {
 
     private RateService rateService;
 
+    private BusinessRatesConfiguration.Health config;
+
     @Before
     public void setUp() throws IOException {
         rateService = mock(RateService.class);
-        healthcheck = new Healthcheck(rateService, "EH66QQ");
+        config = new BusinessRatesConfiguration.Health();
+        config.setSearch("EH66QQ");
+        healthcheck = new Healthcheck(rateService, config, Clock.systemDefaultZone());
     }
 
     @Test
@@ -35,19 +39,19 @@ public class HealthcheckTest {
         SearchResponse saaResponse = loadResponse("/victoria-quay.json");
         when(rateService.search(anyString())).thenReturn(saaResponse);
 
-        ResponseEntity<String> health = healthcheck.health();
+        Response health = healthcheck.health();
 
-        assertEquals(200, health.getStatusCode().value());
+        assertThat(health.getStatus()).isEqualTo(200);
     }
 
     @Test
     public void returns503WhenUnavailable() throws IOException {
         SearchResponse saaResponse = loadResponse("/victoria-quay.json");
-        when(rateService.search("EH66QQ")).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        when(rateService.search("EH66QQ")).thenReturn(new SearchResponse());
 
-        ResponseEntity<String> health = healthcheck.health();
+        Response health = healthcheck.health();
 
-        assertEquals(503, health.getStatusCode().value());
+        assertThat(health.getStatus()).isEqualTo(503);
     }
 
     private SearchResponse loadResponse(String file) throws IOException {
