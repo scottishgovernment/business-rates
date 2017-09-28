@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=business-rates
 WorkingDirectory=/opt/business-rates
-ExecStart=/opt/business-rates/run.sh
+ExecStart=/opt/business-rates/run
 Restart=on-failure
 
 [Install]

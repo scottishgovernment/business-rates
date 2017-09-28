@@ -29,7 +29,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.9</version>
                 <executions>
                     <execution>
                         <goals>
@@ -50,14 +49,6 @@
                 <configuration>
                     <dataSet>
                         <data>
-                            <src>${basedir}/src/deb/init/business-rates.conf</src>
-                            <type>file</type>
-                            <mapper>
-                                <type>perm</type>
-                                <prefix>/etc/init</prefix>
-                            </mapper>
-                        </data>
-                        <data>
                             <src>${basedir}/src/deb/systemd/business-rates.service</src>
                             <type>file</type>
                             <mapper>
@@ -66,7 +57,8 @@
                             </mapper>
                         </data>
                         <data>
-                            <src>${project.build.directory}/dependency/business-rates-service-${project.version}.jar</src>                        
+                            <src>${project.build.directory}/dependency/business-rates-service-${project.version}.jar</src>
+                            <dst>business-rates.jar</dst>
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
@@ -90,7 +82,7 @@
                             </mapper>
                         </data>
                         <data>
-                            <src>${basedir}/src/deb/run.sh</src>
+                            <src>${basedir}/src/deb/run</src>
                             <type>file</type>
                             <mapper>
                                 <type>perm</type>
