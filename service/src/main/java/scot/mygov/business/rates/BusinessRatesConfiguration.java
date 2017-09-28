@@ -49,24 +49,12 @@ public class BusinessRatesConfiguration {
 
         private String key;
 
-        private String username;
-
-        private String password;
-
         public String getUrl() {
             return url;
         }
 
         public String getKey() {
             return key;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
         }
 
     }
