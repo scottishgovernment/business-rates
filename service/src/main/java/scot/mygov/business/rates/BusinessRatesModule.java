@@ -61,7 +61,8 @@ public class BusinessRatesModule {
     @Provides
     @Singleton
     Client client() {
-        return new ResteasyClientBuilder()
+        ResteasyClientBuilder builder = (ResteasyClientBuilder) ResteasyClientBuilder.newBuilder();
+        return builder
                 .connectionPoolSize(10)
                 .build();
     }

@@ -11,6 +11,7 @@
 	<logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
 	<logger name="io" level="INFO"/>
 	<logger name="org" level="INFO"/>
+	<logger name="wiremock" level="INFO"/>
 
 	<root level="debug">
 		<appender-ref ref="stdout" />
