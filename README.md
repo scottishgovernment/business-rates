@@ -93,24 +93,3 @@ Replace {address} with a full or partial Scottish business address.  The address
 }
 ```
 
-## Local Installation
-
-Clone the code from 
-
-
-ssh://git@stash.digital.gov.uk:7999/mgv/mygov-org.mygovscot-business-rates.git
-
-
-The code can be run using 
-
-mvn spring-boot:run
-
-or
-
-mvn clean install
-java -jar target/org.mygovscot-business-rates*.jar
-
-To create a Debian apt installation file build with the debian profile
-
-mvn clean install -Pdebian
-
