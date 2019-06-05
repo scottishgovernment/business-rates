@@ -6,6 +6,7 @@ After=network.target
 User=business-rates
 WorkingDirectory=/opt/business-rates
 ExecStart=/opt/business-rates/run
+SyslogIdentifier=business-rates
 Restart=on-failure
 
 [Install]

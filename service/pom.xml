@@ -113,6 +113,12 @@
       <version>${logback.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>5.2</version>
+    </dependency>
+
     <!-- Dependency injection -->
     <dependency>
       <groupId>com.squareup.dagger</groupId>

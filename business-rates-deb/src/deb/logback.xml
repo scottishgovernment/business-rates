@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <appender name="log" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <File>/var/log/business-rates/business-rates.log</File>
-      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>/var/log/business-rates/business-rates.%d{yyyy-MM-dd}.log</FileNamePattern>
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <Pattern>%d{ISO8601,UTC} [%thread] %-5level %logger{86} - %msg%n</Pattern>
-    </encoder>
+  <appender name="log" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
   </appender>
 
   <logger name="scot.mygov.search" level="INFO"/>
