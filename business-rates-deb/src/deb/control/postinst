@@ -14,11 +14,6 @@ mkdir -p /var/log/business-rates
 chmod 755 /var/log/business-rates
 chown -R business-rates:nogroup /var/log/business-rates
 
-if [ -x /bin/systemctl ]
-then
-    systemctl daemon-reload
-    systemctl enable business-rates
-    systemctl start business-rates
-else
-    service business-rates start
-fi
+systemctl daemon-reload
+systemctl enable business-rates
+systemctl start business-rates
