@@ -2,6 +2,7 @@ package scot.mygov.business.rates;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -32,6 +33,14 @@ public class RequestLogger implements ContainerRequestFilter, ContainerResponseF
     public void filter(ContainerRequestContext request) throws IOException {
         Instant start = Instant.now();
         request.setProperty(START_PROPERTY, start);
+
+        MDC.put("url.path", request.getUriInfo().getPath());
+        MDC.put("http.request.method", request.getRequest().getMethod());
+
+        String query = request.getUriInfo().getRequestUri().getQuery();
+        if (query != null) {
+            MDC.put("url.query", query);
+        }
     }
 
     @Override
@@ -41,15 +50,11 @@ public class RequestLogger implements ContainerRequestFilter, ContainerResponseF
         Instant end = Instant.now();
 
         Map<String, String> event = new HashMap<>();
-
         event.put("event.start", start.toString());
         event.put("event.end", end.toString());
         event.put("event.duration", Long.toString(Duration.between(start, end).toMillis()));
         event.put("event.outcome", outcome(response.getStatusInfo().getFamily()));
 
-        event.put("url.path", request.getUriInfo().getPath());
-
-        event.put("http.request.method", request.getRequest().getMethod());
         event.put("http.response.status_code", Integer.toString(response.getStatus()));
 
         String method = request.getRequest().getMethod();
