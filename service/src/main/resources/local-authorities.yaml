@@ -1,7 +1,7 @@
 ---
 - id: 100
   name: Aberdeen City
-  link: 'https://www.aberdeencity.gov.uk/services/business-and-licensing '
+  link: https://www.aberdeencity.gov.uk/services/business-and-licensing
 - id: 110
   name: Aberdeenshire
   link: https://www.aberdeenshire.gov.uk/business/business-rates/
