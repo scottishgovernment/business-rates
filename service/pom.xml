@@ -71,7 +71,7 @@
     <!-- Cache -->
     <dependency>
       <groupId>org.cache2k</groupId>
-      <artifactId>cache2k-all</artifactId>
+      <artifactId>cache2k-core</artifactId>
       <version>${cache2k.version}</version>
       <scope>runtime</scope>
     </dependency>
@@ -195,11 +195,40 @@
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
           <execution>
+            <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
           </execution>
+          <execution>
+            <id>check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
         </executions>
+        <configuration>
+          <excludes>
+            <exclude>**/*$$*</exclude>
+          </excludes>
+          <rules>
+            <rule>
+              <element>BUNDLE</element>
+              <limits>
+                <limit>
+                  <counter>BRANCH</counter>
+                  <value>COVEREDRATIO</value>
+                  <minimum>0.65</minimum>
+                </limit>
+                <limit>
+                  <counter>LINE</counter>
+                  <value>COVEREDRATIO</value>
+                  <minimum>0.65</minimum>
+                </limit>
+              </limits>
+            </rule>
+          </rules>
+        </configuration>
       </plugin>
 
       <plugin>
