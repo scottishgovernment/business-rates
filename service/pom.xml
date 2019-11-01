@@ -17,7 +17,7 @@
 
 
   <properties>
-    <undertow.version>2.0.21.Final</undertow.version>
+    <undertow.version>2.0.27.Final</undertow.version>
     <resteasy.version>4.0.0.Final</resteasy.version>
     <jackson.version>2.9.9</jackson.version>
     <slf4j.version>1.7.26</slf4j.version>
