@@ -90,15 +90,6 @@
                                 <filemode>755</filemode>
                             </mapper>
                         </data>
-                        <data>
-                            <type>template</type>
-                            <paths>
-                                <path>/var/log/business-rates</path>
-                            </paths>
-                            <mapper>
-                                <type>perm</type>
-                            </mapper>
-                        </data>
                     </dataSet>
                 </configuration>
             </plugin>
