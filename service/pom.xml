@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.mygovscot.business-rates</groupId>
     <artifactId>business-rates</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.101</version>
   </parent>
 
   <artifactId>business-rates-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.101</version>
 
   <name>business-rates-rest-service</name>
   <description>Service to retrieve business rates for properties</description>
@@ -136,7 +136,7 @@
     <dependency>
       <groupId>scot.mygov.config</groupId>
       <artifactId>mygov-config</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.3</version>
     </dependency>
 
     <!-- Test libraries -->
