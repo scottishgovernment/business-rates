@@ -5,6 +5,7 @@ After=network.target
 [Service]
 User=business-rates
 WorkingDirectory=/opt/business-rates
+EnvironmentFile=-/etc/default/business-rates
 ExecStart=/opt/business-rates/run
 SyslogIdentifier=business-rates
 Restart=on-failure
