@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -62,15 +63,29 @@ public class RateResourceTest {
     }
 
     @Test
-    public void service404LATest() throws IOException {
+    public void returnsNoResultsIfAPIReturns404() throws IOException {
         SAAResponse saaResponse = loadResponse(ResultType.NO_RESULTS, "/unknown.json");
         when(service.search("EH66QQ")).thenReturn(saaResponse);
 
         Response response = resource.search("EH66QQ");
 
-        assertThat(response.getStatus()).isEqualTo(404);
+        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
         SearchResponse search = (SearchResponse) response.getEntity();
         assertThat(search.getProperties()).isNullOrEmpty();
+        assertThat(search.getResultType().equals(ResultType.NO_RESULTS));
+    }
+
+    @Test
+    public void returnsTooManyResultsIfAPIReturns403() throws IOException {
+        SAAResponse saaResponse = loadResponse(ResultType.TOO_MANY_RESULTS, "/too-many.json");
+        when(service.search("Princes Street Edinburgh")).thenReturn(saaResponse);
+
+        Response response = resource.search("Princes Street Edinburgh");
+
+        assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+        SearchResponse search = (SearchResponse) response.getEntity();
+        assertThat(search.getProperties()).isNullOrEmpty();
+        assertThat(search.getResultType().equals(ResultType.TOO_MANY_RESULTS));
     }
 
     private SAAResponse loadResponse(ResultType type, String file) throws IOException {

@@ -19,6 +19,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class RateResource {
         if (properties.getProperties() != null) {
             response.setProperties(convert(properties.getProperties()));
         }
-        return Response.status(type.getStatusCode())
+        return Response.status(Status.OK)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(response)
                 .build();

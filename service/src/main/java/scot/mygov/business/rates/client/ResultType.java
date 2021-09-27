@@ -22,15 +22,11 @@ public enum ResultType {
 
     public static ResultType of(int statusCode) {
         for (ResultType resultType : ResultType.values()) {
-            if (resultType.getStatusCode() == statusCode) {
+            if (resultType.statusCode == statusCode) {
                 return resultType;
             }
         }
         throw new RuntimeException("Unexpected status code " + statusCode);
-    }
-
-    public int getStatusCode() {
-        return statusCode;
     }
 
     @JsonValue
