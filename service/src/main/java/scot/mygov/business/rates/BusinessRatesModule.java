@@ -19,12 +19,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.Clock;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static javax.cache.expiry.Duration.FIVE_MINUTES;
 import static javax.cache.expiry.Duration.ONE_HOUR;
 
 @Module(injects = BusinessRates.class)
