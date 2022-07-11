@@ -19,8 +19,11 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
+import java.sql.Time;
 import java.time.Clock;
+import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.cache.expiry.Duration.FIVE_MINUTES;
 import static javax.cache.expiry.Duration.ONE_HOUR;
 
@@ -64,6 +67,9 @@ public class BusinessRatesModule {
         ResteasyClientBuilder builder = (ResteasyClientBuilder) ResteasyClientBuilder.newBuilder();
         return builder
                 .connectionPoolSize(10)
+                .connectionCheckoutTimeout(3, SECONDS)
+                .connectTimeout(3, SECONDS)
+                .readTimeout(3, SECONDS)
                 .build();
     }
 
