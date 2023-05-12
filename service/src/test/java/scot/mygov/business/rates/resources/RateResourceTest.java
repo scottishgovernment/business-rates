@@ -72,7 +72,7 @@ public class RateResourceTest {
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
         SearchResponse search = (SearchResponse) response.getEntity();
         assertThat(search.getProperties()).isNullOrEmpty();
-        assertThat(search.getResultType().equals(ResultType.NO_RESULTS));
+        assertThat(search.getResultType()).isEqualTo(ResultType.NO_RESULTS);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class RateResourceTest {
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
         SearchResponse search = (SearchResponse) response.getEntity();
         assertThat(search.getProperties()).isNullOrEmpty();
-        assertThat(search.getResultType().equals(ResultType.TOO_MANY_RESULTS));
+        assertThat(search.getResultType()).isEqualTo(ResultType.TOO_MANY_RESULTS);
     }
 
     private SAAResponse loadResponse(ResultType type, String file) throws IOException {
