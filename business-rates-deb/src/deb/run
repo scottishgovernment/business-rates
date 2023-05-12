@@ -5,5 +5,4 @@ JAVA=${JAVA_HOME:-/usr}/bin/java
 
 exec "$JAVA" \
   -Dlogback.configurationFile=/opt/business-rates/logback.xml \
-  -Djava.security.properties=/opt/business-rates/security.properties \
   -jar /opt/business-rates/business-rates.jar

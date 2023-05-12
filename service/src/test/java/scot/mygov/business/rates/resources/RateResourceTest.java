@@ -2,6 +2,7 @@ package scot.mygov.business.rates.resources;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import scot.mygov.business.rates.client.ResultType;
@@ -11,11 +12,10 @@ import scot.mygov.business.rates.client.SAAResult;
 import scot.mygov.business.rates.representations.Property;
 import scot.mygov.business.rates.representations.SearchResponse;
 
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static javax.ws.rs.core.Response.Status.OK;
+import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

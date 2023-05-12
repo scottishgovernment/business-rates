@@ -2,6 +2,9 @@ package scot.mygov.business.rates;
 
 import dagger.Module;
 import dagger.Provides;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.UriBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +18,6 @@ import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.time.Clock;
 
@@ -66,6 +66,7 @@ public class BusinessRatesModule {
                 .connectionPoolSize(10)
                 .connectionCheckoutTimeout(3, SECONDS)
                 .connectTimeout(3, SECONDS)
+                .connectionTTL(10, SECONDS)
                 .readTimeout(3, SECONDS)
                 .build();
     }

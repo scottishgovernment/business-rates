@@ -1,8 +1,7 @@
 package scot.mygov.business.rates;
 
+import jakarta.ws.rs.core.Response;
 import org.junit.Test;
-
-import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

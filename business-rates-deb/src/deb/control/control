@@ -4,7 +4,5 @@ Section: mygov
 Priority: optional
 Architecture: all
 Description: [[description]]
-Maintainer: tim.squires@scotland.gsi.gov.uk
-Recommends: java-jdk
-Replaces: business-rates-rest-service
-Conflicts: business-rates-rest-service
+Maintainer: martin.ellis@gov.scot
+Depends: java11-runtime-headless

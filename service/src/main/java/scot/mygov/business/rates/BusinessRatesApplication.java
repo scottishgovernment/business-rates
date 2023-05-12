@@ -1,9 +1,9 @@
 package scot.mygov.business.rates;
 
+import jakarta.ws.rs.core.Application;
 import scot.mygov.business.rates.resources.RateResource;
 
 import javax.inject.Inject;
-import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 

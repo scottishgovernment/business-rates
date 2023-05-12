@@ -2,6 +2,8 @@ package scot.mygov.business.rates.resources;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 import scot.mygov.business.rates.BusinessRatesConfiguration;
@@ -11,8 +13,6 @@ import scot.mygov.business.rates.client.SAAClient;
 import scot.mygov.business.rates.client.SAAResponse;
 import scot.mygov.business.rates.client.SAAResult;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Clock;
