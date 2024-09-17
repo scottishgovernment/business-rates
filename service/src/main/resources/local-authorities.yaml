@@ -10,10 +10,10 @@
   link: https://www.angus.gov.uk/business/business_rates
 - id: 130
   name: Argyll and Bute
-  link: https://www.argyll-bute.gov.uk/business-and-trade/business-rates
+  link: https://www.argyll-bute.gov.uk/business-and-licensing/business-rates
 - id: 150
   name: Clackmannanshire
-  link: https://www.clacks.gov.uk/council/payit/
+  link: https://www.clacks.gov.uk/business/businessrates/
 - id: 170
   name: Dumfries and Galloway
   link: https://www.dumgal.gov.uk/article/15179/Business-rates
@@ -43,10 +43,10 @@
   link: https://www.falkirk.gov.uk/services/business-investment/business-rates/
 - id: 250
   name: Fife
-  link: https://www.fifedirect.org.uk/topics/index.cfm?fuseaction=subject.display&subjectid=350F6121-ADF3-2158-7D94B34548B73EED
+  link: https://www.fife.gov.uk/kb/docs/articles/business2/business-rates
 - id: 260
   name: Glasgow City
-  link: https://glasgow.gov.uk/index.aspx?articleid=17154
+  link: https://www.glasgow.gov.uk/ndr
 - id: 270
   name: Highland
   link: https://www.highland.gov.uk/info/2/business_rates/404/non-domestic_rates
@@ -67,7 +67,7 @@
   link: https://www.northlanarkshire.gov.uk/index.aspx?articleid=29202
 - id: 330
   name: Orkney Islands
-  link: http://www.orkney.gov.uk/Service-Directory/B/Business-Rates.htm
+  link: https://www.orkney.gov.uk/our-services/enterprise-and-economic-growth/business-rates/
 - id: 340
   name: Perth and Kinross
   link: https://www.pkc.gov.uk/nondomesticrates
@@ -82,7 +82,7 @@
   link: https://www.shetland.gov.uk/about_business_rates/
 - id: 370
   name: South Ayrshire
-  link: https://www.south-ayrshire.gov.uk/businessrates/
+  link: https://south-ayrshire.gov.uk/business-rates
 - id: 380
   name: South Lanarkshire
   link: http://www.southlanarkshire.gov.uk/info/200157/business_rates
