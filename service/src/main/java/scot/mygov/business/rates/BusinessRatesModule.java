@@ -6,13 +6,10 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.UriBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scot.mygov.business.rates.client.JCacheClient;
 import scot.mygov.business.rates.client.SAAClient;
 import scot.mygov.business.rates.client.SAAJaxRsClient;
 import scot.mygov.business.rates.resources.LocalAuthorities;
-import scot.mygov.config.Configuration;
 
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
@@ -24,23 +21,8 @@ import java.time.Clock;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.cache.expiry.Duration.ONE_HOUR;
 
-@Module(injects = BusinessRates.class)
+@Module
 public class BusinessRatesModule {
-
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(BusinessRatesModule.class);
-
-    private static final String APP_NAME = "business_rates";
-
-    @Provides
-    @Singleton
-    BusinessRatesConfiguration configuration() {
-        Configuration<BusinessRatesConfiguration> configuration = Configuration
-                .load(new BusinessRatesConfiguration(), APP_NAME)
-                .validate();
-        LOGGER.info("{}", configuration);
-        return configuration.getConfiguration();
-    }
 
     @Provides
     @Singleton

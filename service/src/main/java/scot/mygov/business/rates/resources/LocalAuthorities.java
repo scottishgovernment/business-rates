@@ -3,9 +3,9 @@ package scot.mygov.business.rates.resources;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;

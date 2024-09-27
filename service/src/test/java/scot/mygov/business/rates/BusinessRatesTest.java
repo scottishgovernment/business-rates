@@ -1,7 +1,7 @@
 package scot.mygov.business.rates;
 
+import dagger.Component;
 import dagger.Module;
-import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.Test;
 import scot.mygov.config.Configuration;
@@ -15,12 +15,20 @@ public class BusinessRatesTest {
 
     @Test
     public void canCreateDependencyGraph() {
-        ObjectGraph graph = ObjectGraph.create(new TestBusinessRatesModule());
-        graph.get(BusinessRates.class);
+        DaggerBusinessRatesTest_TestMain.create().main();
     }
 
-    @Module(includes = BusinessRatesModule.class, injects = BusinessRates.class, overrides = true)
-    static class TestBusinessRatesModule {
+    @Singleton
+    @Component(modules = {
+            BusinessRatesModule.class,
+            TestConfigurationModule.class,
+    })
+    interface TestMain {
+        BusinessRates main();
+    }
+
+    @Module(includes = BusinessRatesModule.class)
+    static class TestConfigurationModule {
         @Provides
         @Singleton
         BusinessRatesConfiguration configuration() {

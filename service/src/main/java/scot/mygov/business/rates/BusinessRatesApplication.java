@@ -23,6 +23,11 @@ public class BusinessRatesApplication extends Application {
     @Inject
     RequestLogger logger;
 
+    @Inject
+    public BusinessRatesApplication() {
+        // Default constructor
+    }
+
     @Override
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(

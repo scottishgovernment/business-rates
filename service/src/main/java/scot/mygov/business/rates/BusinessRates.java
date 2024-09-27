@@ -1,6 +1,6 @@
 package scot.mygov.business.rates;
 
-import dagger.ObjectGraph;
+import dagger.Component;
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.slf4j.Logger;
@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.InetSocketAddress;
 
 public class BusinessRates {
@@ -21,11 +22,16 @@ public class BusinessRates {
     @Inject
     BusinessRatesApplication app;
 
+    @Inject
+    public BusinessRates() {
+        // Default constructor
+    }
+
     public static final void main(String[] args) {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
-        ObjectGraph graph = ObjectGraph.create(new BusinessRatesModule());
-        graph.get(BusinessRates.class).run();
+        BusinessRates businessRates = DaggerBusinessRates_Main.create().main();
+        businessRates.run();
     }
 
     public void run() {
@@ -43,6 +49,15 @@ public class BusinessRates {
                     .getAddress();
             return address.getPort();
         }
+    }
+
+    @Singleton
+    @Component(modules = {
+            BusinessRatesModule.class,
+            EnvironmentConfigurationModule.class,
+    })
+    interface Main {
+        BusinessRates main();
     }
 
 }
