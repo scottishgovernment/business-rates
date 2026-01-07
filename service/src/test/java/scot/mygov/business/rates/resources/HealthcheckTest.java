@@ -41,7 +41,7 @@ public class HealthcheckTest {
     private Clock clock;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         rateService = mock(SAAClient.class);
         config = new BusinessRatesConfiguration.Health();
         config.setSearch("EH66QQ");
@@ -132,7 +132,7 @@ public class HealthcheckTest {
     }
 
     @Test
-    public void returns503WhenUnavailable() throws IOException {
+    public void returns503WhenUnavailable() {
         SAAResponse result = new SAAResponse(ResultType.NO_RESULTS, new SAAResult());
         when(rateService.search("EH66QQ")).thenReturn(result);
 
