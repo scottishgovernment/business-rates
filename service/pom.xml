@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.mygovscot.business-rates</groupId>
     <artifactId>business-rates</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.121</version>
   </parent>
 
   <artifactId>business-rates-service</artifactId>
@@ -143,7 +143,7 @@
     <dependency>
       <groupId>scot.mygov.config</groupId>
       <artifactId>mygov-config</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.13</version>
     </dependency>
 
     <!-- Other -->
