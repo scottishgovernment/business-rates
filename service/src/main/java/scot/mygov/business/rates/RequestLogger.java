@@ -68,16 +68,12 @@ public class RequestLogger implements ContainerRequestFilter, ContainerResponseF
     }
 
     static String outcome(Response.Status.Family family) {
-        switch (family) {
-            case SUCCESSFUL:
-                return "success";
-            case SERVER_ERROR:
-                return "failure";
-            case CLIENT_ERROR:
-                return "failure";
-            default:
-                return "unknown";
-        }
+        return switch (family) {
+            case SUCCESSFUL -> "success";
+            case SERVER_ERROR -> "failure";
+            case CLIENT_ERROR -> "failure";
+            default -> "unknown";
+        };
     }
 
 }

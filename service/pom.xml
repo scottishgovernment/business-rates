@@ -15,14 +15,12 @@
   <name>business-rates-rest-service</name>
   <description>Service to retrieve business rates for properties</description>
 
-
   <properties>
-    <dagger.version>2.52</dagger.version>
-    <undertow.version>2.3.21.Final</undertow.version>
-    <resteasy.version>6.2.15.Final</resteasy.version>
-    <jackson.version>2.20.0</jackson.version>
-    <slf4j.version>2.0.16</slf4j.version>
-    <logback.version>1.5.8</logback.version>
+    <dagger.version>2.60</dagger.version>
+    <resteasy.version>7.0.2.Final</resteasy.version>
+    <jackson.version>2.22.0</jackson.version>
+    <slf4j.version>2.0.18</slf4j.version>
+    <logback.version>1.5.37</logback.version>
     <cache2k.version>2.6.1.Final</cache2k.version>
     <sonar.exclusions>target/**</sonar.exclusions>
   </properties>
@@ -33,13 +31,13 @@
     <dependency>
       <groupId>io.undertow</groupId>
       <artifactId>undertow-core</artifactId>
-      <version>${undertow.version}</version>
+      <version>2.4.2.Final</version>
     </dependency>
 
     <dependency>
       <groupId>io.undertow</groupId>
       <artifactId>undertow-servlet</artifactId>
-      <version>${undertow.version}</version>
+      <version>2.3.25.Final</version>
     </dependency>
 
     <!-- JAX-RS -->
@@ -66,7 +64,7 @@
     <dependency>
       <groupId>org.jboss.logging</groupId>
       <artifactId>jboss-logging</artifactId>
-      <version>3.6.1.Final</version>
+      <version>3.6.3.Final</version>
     </dependency>
 
     <dependency>
@@ -123,7 +121,7 @@
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>8.0</version>
+      <version>9.0</version>
     </dependency>
 
     <!-- Dependency injection -->
@@ -150,7 +148,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.17.0</version>
+      <version>2.22.0</version>
     </dependency>
 
     <!-- Test libraries -->
@@ -170,7 +168,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.13.0</version>
+      <version>5.23.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -203,6 +201,27 @@
 
   <build>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>resolve-mockito-agent</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -275,7 +294,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>3.3.4</version>
+        <version>4.0.6</version>
         <executions>
           <execution>
             <goals>
