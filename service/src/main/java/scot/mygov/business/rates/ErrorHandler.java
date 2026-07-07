@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
+@Singleton
 public class ErrorHandler implements ExceptionMapper<Exception> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);

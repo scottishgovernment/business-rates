@@ -13,16 +13,14 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-
-import static net.logstash.logback.argument.StructuredArguments.entries;
 
 public class RequestLogger implements ContainerRequestFilter, ContainerResponseFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessRates.class);
 
     private static final String START_PROPERTY = "start";
+
+    private static final String URL_QUERY = "url.query";
 
     @Inject
     public RequestLogger() {
@@ -39,32 +37,33 @@ public class RequestLogger implements ContainerRequestFilter, ContainerResponseF
 
         String query = request.getUriInfo().getRequestUri().getQuery();
         if (query != null) {
-            MDC.put("url.query", query);
+            MDC.put(URL_QUERY, query);
         }
     }
 
     @Override
-    public void filter(ContainerRequestContext request, ContainerResponseContext response)
-            throws IOException {
+    public void filter(ContainerRequestContext request, ContainerResponseContext response) {
+        if (!"/health".equals(request.getUriInfo().getPath())) {
+            logRequest(request, response);
+        }
+        MDC.remove(URL_QUERY);
+    }
+
+    private static void logRequest(ContainerRequestContext request, ContainerResponseContext response) {
         Instant start = (Instant) request.getProperty(START_PROPERTY);
         Instant end = Instant.now();
+        long duration = Duration.between(start, end).toMillis();
 
-        Map<String, String> event = new HashMap<>();
-        event.put("event.start", start.toString());
-        event.put("event.end", end.toString());
-        event.put("event.duration", Long.toString(Duration.between(start, end).toMillis()));
-        event.put("event.outcome", outcome(response.getStatusInfo().getFamily()));
-
-        event.put("http.response.status_code", Integer.toString(response.getStatus()));
-
-        String method = request.getRequest().getMethod();
-        String path = request.getUriInfo().getPath();
-        int status = response.getStatus();
-        LOGGER.info("{} {} {}",
-                status,
-                method,
-                path,
-                entries(event));
+        LOGGER.atInfo()
+                .addKeyValue("event.start", start.toString())
+                .addKeyValue("event.end", end.toString())
+                .addKeyValue("event.duration", Long.toString(duration))
+                .addKeyValue("event.outcome", outcome(response.getStatusInfo().getFamily()))
+                .addKeyValue("http.response.status_code", Integer.toString(response.getStatus()))
+                .addArgument(response.getStatus())
+                .addArgument(request.getRequest().getMethod())
+                .addArgument(request.getUriInfo().getPath())
+                .log("{} {} {}");
     }
 
     static String outcome(Response.Status.Family family) {

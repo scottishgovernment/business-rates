@@ -15,6 +15,9 @@ public class BusinessRatesApplication extends Application {
     RateResource rateResource;
 
     @Inject
+    SearchMonitor searchMonitor;
+
+    @Inject
     ErrorHandler errorHandler;
 
     @Inject
@@ -32,6 +35,7 @@ public class BusinessRatesApplication extends Application {
     public Set<Object> getSingletons() {
         return new HashSet<>(asList(
                 rateResource,
+                searchMonitor,
                 errorHandler,
                 healthcheck,
                 logger

@@ -26,12 +26,6 @@ public class BusinessRatesModule {
 
     @Provides
     @Singleton
-    BusinessRatesConfiguration.Health healthConfig(BusinessRatesConfiguration configuration) {
-        return configuration.getHealth();
-    }
-
-    @Provides
-    @Singleton
     WebTarget saa(Client client, BusinessRatesConfiguration config) {
         BusinessRatesConfiguration.SAA saa = config.getSAA();
         UriBuilder uriBuilder = UriBuilder
@@ -88,6 +82,12 @@ public class BusinessRatesModule {
             throw new RuntimeException("Could not load local authority data", ex);
         }
         return localAuthorities;
+    }
+
+    @Provides
+    @Singleton
+    SearchMonitor searchMonitor() {
+        return new SearchMonitor();
     }
 
 }
