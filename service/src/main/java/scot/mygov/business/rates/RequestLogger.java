@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
+@SearchRequest
 public class RequestLogger implements ContainerRequestFilter, ContainerResponseFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BusinessRates.class);
@@ -43,9 +44,7 @@ public class RequestLogger implements ContainerRequestFilter, ContainerResponseF
 
     @Override
     public void filter(ContainerRequestContext request, ContainerResponseContext response) {
-        if (!"/health".equals(request.getUriInfo().getPath())) {
-            logRequest(request, response);
-        }
+        logRequest(request, response);
         MDC.remove(URL_QUERY);
     }
 

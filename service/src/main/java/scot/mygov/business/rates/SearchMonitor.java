@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import javax.inject.Inject;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@SearchRequest
 public class SearchMonitor implements ContainerResponseFilter {
 
     private final AtomicBoolean lastRequestSuccessful = new AtomicBoolean(true);

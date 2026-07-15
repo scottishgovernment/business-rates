@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import javax.inject.Inject;
 
-@Path("health")
+@Path("")
 public class Healthcheck {
 
     private final SearchMonitor searchMonitor;
@@ -25,6 +25,7 @@ public class Healthcheck {
     }
 
     @GET
+    @Path("health")
     public Response health() {
         boolean ok = searchMonitor.isHealthy();
         return toResponse(ok);

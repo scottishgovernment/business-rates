@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scot.mygov.business.rates.SearchRequest;
 import scot.mygov.business.rates.client.ResultType;
 import scot.mygov.business.rates.client.SAAClient;
 import scot.mygov.business.rates.client.SAAProperty;
@@ -44,6 +45,7 @@ public class RateResource {
     }
 
     @GET
+    @SearchRequest
     public Response search(@QueryParam("search") String search) {
         String postcode = urlSafe(search);
         SAAResponse searchResponse = rates.search(postcode);
