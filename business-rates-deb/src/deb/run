@@ -2,7 +2,9 @@
 . /etc/profile
 set -eu
 JAVA=${JAVA_HOME:-/usr}/bin/java
+JAVA_OPTS=${JAVA_OPTS--XX:+UseSerialGC -XX:GCTimeRatio=10}
 
 exec "$JAVA" \
+  $JAVA_OPTS \
   -Dlogback.configurationFile=/opt/business-rates/logback.xml \
   -jar /opt/business-rates/business-rates.jar
